@@ -1,0 +1,590 @@
+/* Define default (light mode) colors as CSS variables */
+:root {
+  --bg-color: #fff;
+  --text-color: #333;
+  --top-nav-bg: #fff;
+  --top-nav-border: #e0e0e0;
+  --sidebar-bg: #f7f7f7;
+  --sidebar-border: #ccc;
+  --message-bg: #f1f1f1;
+  --user-message-bg: #bdbdbd;
+  --bot-message-bg: #ffffff;
+  --attached-file-bg: #e4e4e4;
+  --button-hover-bg: #eee;
+  --scroll-bar-color: rgb(223, 223, 223);
+}
+
+/* Apply the CSS variables on html and body */
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+
+/* Override variables for dark mode by toggling the .dark-mode class on body */
+body.dark-mode {
+  --bg-color: #181818;
+  --text-color: #ddd;
+  --top-nav-bg: #242424;
+  --top-nav-border: #444;
+  --sidebar-bg: #2a2a2a;
+  --sidebar-border: #444;
+  --message-bg: #333;
+  --user-message-bg: #333;
+  --bot-message-bg: #181818;
+  --attached-file-bg: #333;
+  --button-hover-bg: #5c5c5c;
+  --scroll-bar-color: #242424;
+}
+
+/* Conversation Page Container */
+.conversation-page {
+  display: flex;
+  width: 100%;
+  height: 100vh;
+  box-sizing: border-box;
+  overflow: hidden;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+
+/* Top Navigation Bar */
+.top-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px; /* Vertical padding is handled via fixed height */
+  background-color: var(--top-nav-bg);
+  height: 46px;
+}
+.app-title {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 640;
+}
+
+/* Container for header row when sidebar is closed
+   In the updated design (when sidebar is closed) the left section holds the App title,
+   New Chat icon, and Expand (collapse) icon in one row.
+*/
+.header-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Right-side items in top navigation */
+.nav-right {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+.matric-display {
+  font-size: 0.9rem;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* Sidebar */
+.sidebar {
+  background-color: var(--sidebar-bg);
+  display: flex;
+  flex-direction: column;
+  transition: width 0.3s ease;
+  max-width: 500px;
+  overflow: hidden;
+}
+.sidebar.open {
+  width: 300px;
+}
+.sidebar.closed {
+  width: 0;
+}
+
+/* Sidebar Header - Custom Layout */
+/* The header is split into two containers:
+   - .sidebar-left holds the collapse button (left-aligned)
+   - .sidebar-right holds the New Chat and Search icons (right-aligned)
+*/
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  padding: 0 8px;
+  background-color: inherit;
+  height: 44px;
+}
+.sidebar-left {
+  flex: 0 0 auto;
+}
+.sidebar-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: auto;
+}
+
+/* Button styles for sidebar header icons */
+.new-chat-btn,
+.search-sidebar-btn,
+.collapse-sidebar-btn {
+  color: var(--text-color);;
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  border-radius: 13px;
+  align-items: center;
+  padding: 4px;
+}
+
+.new-chat-btn .icon,
+.search-sidebar-btn .icon,
+.collapse-sidebar-btn .icon {
+  width: 24px;
+  height: 24px;
+}
+
+.new-chat-btn:hover,
+.search-sidebar-btn:hover,
+.collapse-sidebar-btn:hover {
+  background-color: var(--button-hover-bg);
+}
+
+
+/* Sidebar Content */
+.sidebar-content {
+  padding: 20px;
+  flex: 1;
+  overflow-y: auto;
+  color: var(--text-color);
+  scrollbar-color: var(--scroll-bar-color) var(--sidebar-bg);
+}
+
+/* -------------------------------
+   Chat History List & Chat Item
+--------------------------------- */
+.chat-history {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+/* Chat History Title */
+.chat-history-title {
+  margin: 0;
+  padding: 7px;
+  font-size: 0.75rem;
+  font-weight: 650;
+  color: var(--text-color);
+  text-align: left;
+}
+
+.chat-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 10px;
+  transition: background-color ease;
+}
+
+
+.chat-item:hover {
+  background-color: var(--button-hover-bg);
+}
+
+/* Ensure the conversation title takes up the available space */
+.conversation-title {
+  flex: 1;
+  font-size: 0.97rem;
+  color: var(--text-color);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* -------------------------------
+   Delete Icon Container & Icon
+--------------------------------- */
+/* Reserve fixed space for the delete icon, so layout remains constant */
+.delete-icon-container {
+  width: 30px; /* Adjust width if your icon size changes */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Instead of hiding the icon via display:none, use opacity */
+.delete-icon {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  font-size: 1.2rem;
+  color: #c0392b;
+  cursor: pointer;
+}
+
+.chat-item:hover .delete-icon {
+  opacity: 1;
+}
+
+/* Chat Search Container */
+.chat-search-container {
+  padding: 7px;
+}
+
+/* Chat Search Input */
+.chat-search-input {
+  width: 91%;
+  padding: 8px 10px;
+  border: 1px solid var(--sidebar-border);
+  border-radius: 10px;
+  font-size: 1rem;
+}
+
+/*chat delete*/
+.confirm-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4); /* Dim overlay */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.confirm-modal {
+  background: #fff;
+  border-radius: 13px;
+  padding: 20px;
+  width: 300px;
+  max-width: 90%;
+  text-align: center;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+}
+
+.confirm-modal h3 {
+  margin-top: 0;
+  font-size: 1.2rem;
+  color: #202123;
+}
+
+.confirm-modal p {
+  font-size: 1rem;
+  color: #333;
+  margin: 20px 0;
+}
+
+.confirm-modal button {
+  margin: 0 10px;
+  padding: 10px 15px;
+  font-size: 0.9rem;
+  border: none;
+  border-radius: 7px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.confirm-modal button.confirm-btn {
+  background-color: #e74c3c;
+  color: #fff;
+}
+
+.confirm-modal button.cancel-btn {
+  background-color: #bdc3c7;
+  color: #333;
+}
+
+.confirm-modal button:hover {
+  opacity: 0.9;
+}
+
+/* Main Content */
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Chat Area */
+.chat-area {
+  position: relative;
+  height: 100%;
+  background-color: var(--bg-color);
+  overflow: hidden;
+}
+.messages-container {
+  position: absolute;
+  top: 0;
+  bottom: 130px; /* Reserve space for the input bar */
+  left: 0;
+  right: 0;
+  overflow-y: auto;
+  scrollbar-color: var(--scroll-bar-color) var(--bg-color);
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* Message Layout */
+.message-row {
+  display: flex;
+  margin-bottom: 10px;
+}
+.message-row.user {
+  justify-content: flex-end;
+  margin-right: 24%;
+}
+.message-row.bot {
+  justify-content: flex-start;
+  margin-left: 24%;
+}
+.message-text {
+  background-color: var(--message-bg);
+  border-radius: 20px;
+  padding: 10px 14px;
+  max-width: 60%;
+  font-size: 0.95rem;
+  white-space: pre-wrap;
+  word-break: break-word;
+  color: var(--text-color);
+}
+.message-row.user .message-text {
+  background-color: var(--user-message-bg);
+}
+.message-row.bot .message-text {
+  background-color: var(--bot-message-bg);
+}
+
+/* Message Attachments */
+.attached-files-message {
+  margin-top: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+.attached-file-message {
+  background-color: var(--message-bg);
+  border-radius: 8px;
+  padding: 4px 8px;
+  font-size: 0.8rem;
+  color: var(--text-color);
+}
+
+/* Input Bar */
+.input-bar {
+  position: absolute;
+  left: 50%;
+  width: 100%;
+  max-width: 800px;
+  background-color: var(--top-nav-bg);
+  border: 1px solid var(--top-nav-border);
+  border-radius: 35px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  transition: bottom 0.5s ease, transform 0.5s ease;
+}
+.input-bar.centered {
+  bottom: calc(50% - 40px);
+  transform: translateX(-50%);
+}
+.input-bar.bottom {
+  bottom: 20px;
+  transform: translateX(-50%);
+}
+
+/* Attached Files Row */
+.attached-files {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+.attached-file {
+  display: flex;
+  align-items:center;
+  background-color: var(--attached-file-bg);
+  border-radius: 8px;
+  padding: 4px 8px;
+  gap: 1px;
+
+}
+.remove-file {
+  background: none;
+  border: none;
+  color: #bd3944;
+  cursor: pointer;
+  font-size: 0.72rem;
+}
+.file-name {
+  font-size: 0.85rem;
+  font-style: italic;
+}
+
+/* User Input Textarea */
+.user-input {
+  width: 100%;
+  resize: none;
+  border: 0 solid var(--top-nav-border);
+  border-radius: 13px;
+  padding: 6px 8px;
+  font-size: 1rem;
+  line-height: 24px;
+  max-height: 120px;
+  overflow-y: hidden;
+  outline: none;
+  transition: border-color 0.15s ease;
+  background-color: transparent;
+  color: var(--text-color);
+  box-sizing: border-box;
+}
+/* WebKit Scrollbar */
+.user-input::-webkit-scrollbar {
+  width: 10px;
+}
+.user-input::-webkit-scrollbar-track {
+  background: transparent;
+}
+.user-input::-webkit-scrollbar-thumb {
+  background-color: rgba(141, 141, 141, 0.2);
+  border-radius: 4px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+/* Firefox Scrollbar */
+.user-input {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(141, 141, 141, 0.2) transparent;
+}
+
+/* Buttons Row & Controls */
+.buttons-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+}
+.left-controls, .right-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Button Styles */
+.file-label,
+.search-toggle,
+.mic-btn,
+.send-btn,
+.logout-btn,
+.dark-mode-btn {
+  color: var(--text-color);
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+}
+.file-label {
+  font-size: 0.5rem;
+  color: var(--text-color);;
+  padding: 5px 6px;
+  border-radius: 13px;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+.file-label:hover,
+.search-toggle:hover {
+  background-color: var(--button-hover-bg);
+}
+.search-toggle {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.5rem;
+  color: var(--text-color);;
+  padding: 5px 6px;
+  border-radius: 13px;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+.search-text {
+  margin-left: 5px;
+  font-size: 0.9rem;
+}
+.search-toggle.active {
+  color: #007acc;
+}
+.mic-btn {
+  color: var(--text-color);;
+  font-size: 0.5rem;
+  transition: color 0.15s ease;
+}
+.mic-btn:hover {
+  color: #eb4747;
+}
+.send-btn {
+  color: #006bc2;
+  border-radius: 20px;
+  padding: 0;
+  font-size: 0.5rem;
+  transition: background-color 0.15s ease;
+}
+.send-btn:hover {
+  color: #00487c;
+}
+.dark-mode-btn {
+  padding: 6px 8px;
+  font-size: 1rem;
+  transition: color 0.15s ease;
+}
+.dark-mode-btn:hover {
+  color: #a0a0a0;
+}
+.logout-btn {
+  padding: 6px 8px;
+  border-radius: 13px;
+  font-size: 0.9rem;
+  transition: background-color 0.15s ease;
+}
+.logout-btn:hover {
+  color: #e27979;
+}
+
+/* Audio Visualiser */
+.audio-visualiser {
+  display: flex;
+  gap: 3px;
+  align-items: center;
+  margin-right: 10px;
+  height: 40px;
+}
+.audio-visualiser .visualiser-bar {
+  width: 4px;
+  background-color: #8d8d8d;
+  transition: height 0.1s ease;
+  min-height: 2px;
+}
+
+/* Icon Sizing */
+.icon {
+  width: 24px;
+  height: 24px;
+}
+.send-icon {
+  width: 40px;
+  height: 40px;
+}
+
+/* Disabled button styles */
+.mic-btn:disabled,
+.mic-btn:disabled:hover {
+  color: rgb(145, 145, 145);
+}
+.send-btn:disabled,
+.send-btn:disabled:hover {
+  color: rgb(145, 145, 145);
+  background-color: transparent;
+}
