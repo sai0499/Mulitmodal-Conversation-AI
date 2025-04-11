@@ -21,7 +21,6 @@ export default function ConversationPage() {
   const [userInput, setUserInput] = useState('');
   const [chatHistory, setChatHistory] = useState([]);
   const [isRecording, setIsRecording] = useState(false);
-  const [audioChunks, setAudioChunks] = useState([]);
   const [attachedFiles, setAttachedFiles] = useState([]);
   const [visualiserData, setVisualiserData] = useState([]);
   const [darkMode, setDarkMode] = useState(false);
@@ -39,12 +38,12 @@ export default function ConversationPage() {
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [chatToDelete, setChatToDelete] = useState(null);
 
-  // Refs for audio, messages, textarea etc.
+  // Refs for audio recording, messages, etc.
   const mediaRecorderRef = useRef(null);
+  const audioChunksRef = useRef([]); // Using ref instead of state for audio chunks
   const messagesContainerRef = useRef(null);
   const textAreaRef = useRef(null);
   const audioContextRef = useRef(null);
-  const analyserRef = useRef(null);
   const animationFrameIdRef = useRef(null);
 
   const navigate = useNavigate();
@@ -68,7 +67,6 @@ export default function ConversationPage() {
           headers: { Authorization: `Bearer ${token}` }
         });
         if (response.data.success) {
-          // Map conversations to a list to display in the sidebar.
           const history = response.data.conversations.map(conv => ({
             id: conv._id,
             title: conv.messages.find(m => m.sender === 'user')?.text.substring(0, 20) || 'New Chat'
@@ -115,18 +113,21 @@ export default function ConversationPage() {
       }
     }
   };
+  useEffect(() => {
+    adjustTextAreaHeight();
+  }, [userInput]);
 
-  // Remove an attached file
+  // Remove an attached file.
   const removeFile = (index) => {
     setAttachedFiles(prev => prev.filter((_, i) => i !== index));
   };
 
-  // Update audio visualiser using Web Audio API
-  const updateVisualiser = () => {
-    if (analyserRef.current) {
-      const bufferLength = analyserRef.current.frequencyBinCount;
+  // Update audio visualiser using Web Audio API.
+  const updateVisualiser = (analyser) => {
+    if (analyser) {
+      const bufferLength = analyser.frequencyBinCount;
       const dataArray = new Uint8Array(bufferLength);
-      analyserRef.current.getByteFrequencyData(dataArray);
+      analyser.getByteFrequencyData(dataArray);
       const numBars = 73;
       const barData = [];
       const chunkSize = Math.floor(bufferLength / numBars);
@@ -138,7 +139,7 @@ export default function ConversationPage() {
         barData.push((sum / chunkSize) * 1.5);
       }
       setVisualiserData(barData);
-      animationFrameIdRef.current = requestAnimationFrame(updateVisualiser);
+      animationFrameIdRef.current = requestAnimationFrame(() => updateVisualiser(analyser));
     }
   };
 
@@ -198,7 +199,6 @@ export default function ConversationPage() {
   };
 
   // Send message handler with token authentication and conversation grouping.
-  // If the conversation is new, update the chat history immediately.
   const handleSendMessage = async () => {
     if (userInput.trim().length === 0) return;
 
@@ -226,7 +226,6 @@ export default function ConversationPage() {
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      // If conversation is newly created, store its ID and update chat history.
       if (!activeConversationId && data.conversationId) {
         setActiveConversationId(data.conversationId);
         setChatHistory(prev => ([
@@ -252,22 +251,19 @@ export default function ConversationPage() {
     setIsSending(false);
   };
 
-  // Instead of using window.confirm, set the chat to delete and show our custom confirmation modal.
+  // Delete conversation modal actions.
   const handleDeleteConversation = (chatId) => {
     setChatToDelete(chatId);
     setShowConfirmModal(true);
   };
 
-  // Called when the user confirms deletion in the modal.
   const confirmDeleteConversation = async () => {
     try {
       const token = localStorage.getItem('token');
       await axios.delete(`http://localhost:4000/api/conversation/${chatToDelete}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      // Remove conversation from chatHistory.
       setChatHistory(prev => prev.filter(chat => chat.id !== chatToDelete));
-      // If the active conversation is deleted, clear messages and activeConversationId.
       if (activeConversationId === chatToDelete) {
         setActiveConversationId(null);
         setMessages([]);
@@ -281,36 +277,49 @@ export default function ConversationPage() {
     }
   };
 
-  // Hide the confirmation modal without deleting.
   const cancelDeleteConversation = () => {
     setShowConfirmModal(false);
     setChatToDelete(null);
   };
 
-  // Start voice recording using Web Audio API.
+  // Start voice recording using Web Audio API with production-ready logic.
   const handleStartRecording = async () => {
     setIsRecording(true);
-    setAudioChunks([]);
+    // Reset the ref on recording start.
+    audioChunksRef.current = [];
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      const mediaRecorder = new MediaRecorder(stream);
+      const preferredMime = MediaRecorder.isTypeSupported('audio/webm;codecs=opus')
+        ? 'audio/webm;codecs=opus'
+        : MediaRecorder.isTypeSupported('audio/wav')
+          ? 'audio/wav'
+          : '';
+      const options = preferredMime ? { mimeType: preferredMime } : undefined;
+      const mediaRecorder = new MediaRecorder(stream, options);
       mediaRecorderRef.current = mediaRecorder;
+
+      // Collect audio data into the ref.
       mediaRecorder.ondataavailable = (event) => {
-        if (event.data.size > 0) {
-          setAudioChunks(prev => [...prev, event.data]);
+        if (event.data && event.data.size > 0) {
+          audioChunksRef.current.push(event.data);
         }
       };
+
+      mediaRecorder.onerror = (event) => {
+        console.error("MediaRecorder error:", event.error);
+      };
+
       mediaRecorder.start();
 
+      // Set up audio visualiser.
       const AudioContext = window.AudioContext || window.webkitAudioContext;
       const audioContext = new AudioContext();
       audioContextRef.current = audioContext;
       const source = audioContext.createMediaStreamSource(stream);
       const analyser = audioContext.createAnalyser();
       analyser.fftSize = 256;
-      analyserRef.current = analyser;
       source.connect(analyser);
-      updateVisualiser();
+      updateVisualiser(analyser);
     } catch (err) {
       console.error('Microphone access error:', err);
       alert('Please grant permission to use the Microphone');
@@ -318,7 +327,7 @@ export default function ConversationPage() {
     }
   };
 
-  // Stop voice recording.
+  // Stop recording and send the audio file for transcription.
   const handleStopRecording = () => {
     setIsRecording(false);
     if (animationFrameIdRef.current) {
@@ -329,33 +338,46 @@ export default function ConversationPage() {
     }
     setVisualiserData([]);
     if (!mediaRecorderRef.current) return;
-    mediaRecorderRef.current.stop();
+
+    // Attach onstop handler before stopping.
     mediaRecorderRef.current.onstop = async () => {
-      const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+      const audioData = audioChunksRef.current;
+      const chunkType = audioData[0]?.type || 'audio/webm';
+      const extension = chunkType.includes('wav') ? 'wav' : 'webm';
+      const audioBlob = new Blob(audioData, { type: chunkType });
+      console.log('Audio Blob size:', audioBlob.size);
+
+      if (audioBlob.size === 0) {
+        console.error("Error: Captured audio is empty. Please try recording again.");
+        return;
+      }
+
       const formData = new FormData();
-      formData.append('audio', audioBlob, 'recording.webm');
+      formData.append('audio', audioBlob, `recording.${extension}`);
       try {
-        await axios.post('/api/upload-audio', formData, {
-          headers: { 'Content-Type': 'multipart/form-data' },
-        });
-        alert('Audio clip successfully sent to backend!');
+        const response = await axios.post('http://localhost:5000/api/transcribe', formData);
+        if (response.data.transcription) {
+          setUserInput(prev => prev + " " + response.data.transcription);
+        }
       } catch (err) {
-        console.error('Audio upload error:', err);
+        console.error('Transcription error:', err);
       }
     };
+
+    // Stop the MediaRecorder.
+    mediaRecorderRef.current.stop();
   };
 
   // Determine if send button should be disabled.
   const isSendDisabled = isRecording || isSending || userInput.trim().length === 0;
 
-  // Sidebar actions: clear current conversation (start a new chat).
+  // Sidebar actions.
   const handleNewChat = () => {
     setMessages([]);
     setActiveConversationId(null);
     console.log('New chat initiated');
   };
 
-  // Load full conversation when a chat history item is clicked.
   const handleSelectChat = async (chatId) => {
     try {
       const token = localStorage.getItem('token');
@@ -371,7 +393,7 @@ export default function ConversationPage() {
     }
   };
 
-  // Filter chat history based on the search query.
+  // Filter chat history based on search query.
   const filteredChatHistory = chatHistory.filter(chat =>
     chat.title.toLowerCase().includes(chatSearchQuery.toLowerCase())
   );
