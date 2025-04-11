@@ -1,11 +1,20 @@
-import sys
 import os
-import argparse
 import whisper
 import torch
 
+def transcribe_audio(audio_file_path, model):
+    """
+    Transcribe the audio file using the preloaded Whisper model.
+    Additional audio preprocessing (conversion, normalization) can be added here.
+    """
+    result = model.transcribe(audio_file_path)
+    transcription = result.get("text", "").strip()
+    return transcription
 
-def main():
+if __name__ == "__main__":
+    import sys
+    import argparse
+
     parser = argparse.ArgumentParser(description="Transcribe an audio file using Whisper.")
     parser.add_argument("audio_file", help="Path to the audio file to be transcribed.")
     parser.add_argument("--model_size", default="small", help="Size of the Whisper model to use (default: small).")
@@ -20,7 +29,3 @@ def main():
     model = whisper.load_model(args.model_size, device=device)
     transcription = model.transcribe(args.audio_file).get("text", "").strip()
     print(transcription)
-
-
-if __name__ == "__main__":
-    main()
