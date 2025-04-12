@@ -1,0 +1,15 @@
+.auth-layout-container {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(to bottom right, #343541, #202123);
+    padding: 2rem;
+  }
+  
+  /* 
+    IMPORTANT: We do NOT override your .auth-form-wrapper 
+    or other classes from AuthForm.css here. 
+    So your existing form styling remains intact.
+  */
+  
