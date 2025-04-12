@@ -8,3 +8,4 @@ def load_model(model_size="small", device=None):
 
 # Load the model once at startup
 model = load_model()
+
