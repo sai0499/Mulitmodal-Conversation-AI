@@ -5,9 +5,6 @@ from typing import List, Tuple, Optional
 
 import pdfplumber
 from PIL import Image
-import io
-
-import torch
 from transformers import Blip2Processor, Blip2ForConditionalGeneration, T5ForConditionalGeneration, T5Tokenizer
 
 # Set up logging
