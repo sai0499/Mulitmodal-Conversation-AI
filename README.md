@@ -1,3 +1,5 @@
+# Always make sure to commit changes in a order way with proper description
+ 
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
