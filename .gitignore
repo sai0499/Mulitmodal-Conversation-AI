@@ -4,7 +4,14 @@
 /node_modules
 /.pnp
 .pnp.js
-
+/server/.env
+/Python-server/.idea
+/Python-server/__pycache__
+/Python-server/.venv
+/Python-server/.vs
+/server/node_modules
+/SyntheticDatasetforIntentClassifier/.idea
+/SyntheticDatasetforIntentClassifier/.vs
 # testing
 /coverage
 

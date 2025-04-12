@@ -111,9 +111,9 @@ function AuthForm() {
         return;
       }
   
-      // SUCCESS: Save token and matric number in localStorage
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('matricNumber', data.user.matricNumber);
+      // SUCCESS: Save token and matric number in sessionstorage
+      sessionStorage.setItem('token', data.token);
+      sessionStorage.setItem('matricNumber', data.user.matricNumber);
   
       setErrorMessage('');
       setSuccessMessage('Login successful!');

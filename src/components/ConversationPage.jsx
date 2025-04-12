@@ -1,7 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import ReactMarkdown from 'react-markdown'; // For rendering markdown in bot responses
 import './ConversationPage.css';
+import FileAttachment from './FileAttachment';
 
 // Import icons from react-icons
 import { CgAdd, CgLogOut } from 'react-icons/cg';
@@ -11,8 +13,16 @@ import { FaRegCircleStop } from 'react-icons/fa6';
 import { FiMic } from 'react-icons/fi';
 import { TiWeatherSunny } from 'react-icons/ti';
 import { PiMoonStarsFill } from 'react-icons/pi';
-import { LuPenLine, LuSearch, LuPanelRightOpen, LuPanelLeftOpen } from "react-icons/lu";
-import { MdOutlineDeleteForever } from "react-icons/md";
+import { BiCopy } from 'react-icons/bi';
+import { IoMdVolumeHigh } from 'react-icons/io';
+
+import {
+  LuPenLine,
+  LuSearch,
+  LuPanelRightOpen,
+  LuPanelLeftOpen,
+} from 'react-icons/lu';
+import { MdOutlineDeleteForever } from 'react-icons/md';
 
 export default function ConversationPage() {
   // State declarations
@@ -40,17 +50,22 @@ export default function ConversationPage() {
 
   // Refs for audio recording, messages, etc.
   const mediaRecorderRef = useRef(null);
-  const audioChunksRef = useRef([]); // Using ref instead of state for audio chunks
+  const audioChunksRef = useRef([]);
   const messagesContainerRef = useRef(null);
   const textAreaRef = useRef(null);
   const audioContextRef = useRef(null);
   const animationFrameIdRef = useRef(null);
+  const chatSearchRef = useRef(null);
+
+  const [ttsActiveMessageId, setTTSActiveMessageId] = useState(null);
+  const ttsUtteranceRef = useRef(null);
+  const [copiedMessageIndex, setCopiedMessageIndex] = useState(null);
 
   const navigate = useNavigate();
 
-  // Set matric number from localStorage on mount; if absent, redirect to login page.
+  // On mount, set matric number; if absent, redirect.
   useEffect(() => {
-    const storedMatric = localStorage.getItem('matricNumber');
+    const storedMatric = sessionStorage.getItem('matricNumber');
     if (storedMatric) {
       setMatricNumber(storedMatric);
     } else {
@@ -58,18 +73,99 @@ export default function ConversationPage() {
     }
   }, [navigate]);
 
-  // Fetch user chat history from backend when component mounts.
+  // On mount, load activeConversationId from localStorage and fetch its messages
+  useEffect(() => {
+    const storedActiveConversationId = sessionStorage.getItem('activeConversationId');
+    if (storedActiveConversationId) {
+      setActiveConversationId(storedActiveConversationId);
+      fetchConversation(storedActiveConversationId);
+    }
+  }, []);
+
+  // Helper function: Fetch conversation details by ID.
+  const fetchConversation = async (conversationId) => {
+    try {
+      const token = sessionStorage.getItem('token');
+      const response = await axios.get(
+        `http://localhost:4000/api/conversation/${conversationId}`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      if (response.data.success) {
+        setMessages(response.data.conversation.messages);
+      }
+    } catch (error) {
+      console.error('Error fetching conversation:', error);
+    }
+  };
+
+  const handleCopy = (text, idx) => {
+    navigator.clipboard.writeText(text);
+    setCopiedMessageIndex(idx);
+    // Clear the copy status after 3 seconds
+    setTimeout(() => setCopiedMessageIndex(null), 3000);
+  };
+
+
+  const handleToggleTTS = (idx, text) => {
+    if (ttsActiveMessageId === idx) {
+      // If already reading this message, cancel.
+      speechSynthesis.cancel();
+      setTTSActiveMessageId(null);
+    } else {
+      // Stop any ongoing speech.
+      speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      ttsUtteranceRef.current = utterance;
+      speechSynthesis.speak(utterance);
+      setTTSActiveMessageId(idx);
+
+      // When TTS ends, clear the state.
+      utterance.onend = () => {
+        setTTSActiveMessageId(null);
+      };
+    }
+  };
+  // Reset tts active state & Cancel any ongoing speech
+  const stopTTS = () => {
+    speechSynthesis.cancel();
+    setTTSActiveMessageId(null);
+  };
+
+  // Update handleSelectChat to also persist the selected conversation.
+  const handleSelectChat = async (chatId) => {
+    try {
+      stopTTS();
+      const token = sessionStorage.getItem('token');
+      const response = await axios.get(
+        `http://localhost:4000/api/conversation/${chatId}`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      if (response.data.success) {
+        setActiveConversationId(chatId);
+        sessionStorage.setItem('activeConversationId', chatId);
+        setMessages(response.data.conversation.messages);
+      }
+    } catch (error) {
+      console.error('Error fetching conversation: ', error);
+    }
+  };
+
+  // Fetch conversation history.
   useEffect(() => {
     const fetchConversations = async () => {
       try {
-        const token = localStorage.getItem('token');
+        const token = sessionStorage.getItem('token');
         const response = await axios.get('http://localhost:4000/api/conversations', {
-          headers: { Authorization: `Bearer ${token}` }
+          headers: { Authorization: `Bearer ${token}` },
         });
         if (response.data.success) {
-          const history = response.data.conversations.map(conv => ({
+          const history = response.data.conversations.map((conv) => ({
             id: conv._id,
-            title: conv.messages.find(m => m.sender === 'user')?.text.substring(0, 20) || 'New Chat'
+            // Use stored title if available; otherwise, fallback.
+            title:
+              conv.title ||
+              (conv.messages.find((m) => m.sender === 'user')?.text.substring(0, 20) || 'New Chat'),
+            loading: false,
           }));
           setChatHistory(history);
         }
@@ -80,8 +176,24 @@ export default function ConversationPage() {
     fetchConversations();
   }, []);
 
-  // Toggle dark mode on document body.
+  // Automatically focus the search input when search is activated.
   useEffect(() => {
+    if (isChatSearchActive && chatSearchRef.current) {
+      chatSearchRef.current.focus();
+    }
+  }, [isChatSearchActive]);
+
+  // On mount, load dark mode preference
+  useEffect(() => {
+    const storedDarkMode = localStorage.getItem('darkMode');
+    if (storedDarkMode === "true") {
+      setDarkMode(true);
+    }
+  }, []);
+
+  // When darkMode changes, update localStorage and document body class
+  useEffect(() => {
+    localStorage.setItem('darkMode', darkMode);
     if (darkMode) {
       document.body.classList.add('dark-mode');
     } else {
@@ -89,14 +201,14 @@ export default function ConversationPage() {
     }
   }, [darkMode]);
 
-  // Auto-scroll messages container on new messages.
+  // Auto-scroll messages container.
   useEffect(() => {
     if (messagesContainerRef.current) {
       messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
     }
   }, [messages]);
 
-  // Auto-resize textarea (limit to 5 lines)
+  // Auto-resize textarea.
   const adjustTextAreaHeight = () => {
     if (textAreaRef.current) {
       textAreaRef.current.style.height = 'auto';
@@ -113,16 +225,12 @@ export default function ConversationPage() {
       }
     }
   };
+
   useEffect(() => {
     adjustTextAreaHeight();
   }, [userInput]);
 
-  // Remove an attached file.
-  const removeFile = (index) => {
-    setAttachedFiles(prev => prev.filter((_, i) => i !== index));
-  };
-
-  // Update audio visualiser using Web Audio API.
+  // Update audio visualiser.
   const updateVisualiser = (analyser) => {
     if (analyser) {
       const bufferLength = analyser.frequencyBinCount;
@@ -143,7 +251,7 @@ export default function ConversationPage() {
     }
   };
 
-  // Handle key down for Enter (without Shift) to send message.
+  // Handle Enter key.
   const handleKeyDown = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
@@ -151,23 +259,25 @@ export default function ConversationPage() {
     }
   };
 
-  // Logout action: remove token and matric number, then redirect.
+  // Logout action.
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('matricNumber');
+    stopTTS();
+    sessionStorage.removeItem('token');
+    sessionStorage.removeItem('matricNumber');
+    sessionStorage.removeItem('activeConversationId');
     navigate('/');
   };
 
   // Toggle dark mode.
   const toggleDarkMode = () => {
-    setDarkMode(prev => !prev);
+    setDarkMode((prev) => !prev);
   };
 
-  // Handle file upload.
+  // File upload handler.
   const handleFileChange = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    setAttachedFiles(prev => [...prev, file]);
+    setAttachedFiles((prev) => [...prev, file]);
     try {
       const formData = new FormData();
       formData.append('file', file);
@@ -181,7 +291,20 @@ export default function ConversationPage() {
     }
   };
 
-  // Toggle the existing web search mode in the chat area.
+  // Remove a file.
+  const removeFile = (index) => {
+    setAttachedFiles((prev) => {
+      const updated = [...prev];
+      const fileToRemove = updated[index];
+      if (fileToRemove && fileToRemove.previewUrl) {
+        URL.revokeObjectURL(fileToRemove.previewUrl);
+      }
+      updated.splice(index, 1);
+      return updated;
+    });
+  };
+
+  // Toggle web search mode.
   const toggleSearch = async () => {
     const newValue = !searchMode;
     setSearchMode(newValue);
@@ -192,23 +315,47 @@ export default function ConversationPage() {
     }
   };
 
-  // Toggle chat history search in the sidebar.
+  // Toggle sidebar chat search.
   const toggleChatSearch = () => {
-    setIsChatSearchActive(prev => !prev);
+    setIsChatSearchActive((prev) => !prev);
     setChatSearchQuery('');
   };
 
-  // Send message handler with token authentication and conversation grouping.
-  const handleSendMessage = async () => {
-    if (userInput.trim().length === 0) return;
+  // Helper function: simulate typing animation for bot responses.
+  const simulateTyping = (fullText) => {
+    return new Promise((resolve) => {
+      let index = 0;
+      const typingInterval = setInterval(() => {
+        index++;
+        setMessages((prevMessages) => {
+          const newMessages = [...prevMessages];
+          if (
+            newMessages.length > 0 &&
+            newMessages[newMessages.length - 1].loading
+          ) {
+            newMessages[newMessages.length - 1].text = fullText.substring(0, index);
+          }
+          return newMessages;
+        });
+        if (index >= fullText.length) {
+          clearInterval(typingInterval);
+          resolve();
+        }
+      }, 0.001); // Adjust speed as needed.
+    });
+  };
 
-    // Append the user message to UI immediately.
+  // Send message handler.
+  const handleSendMessage = async () => {
+    stopTTS();
+    if (userInput.trim().length === 0) return;
+    // Immediately append user message.
     const userMsg = {
       sender: 'user',
       text: userInput,
-      files: attachedFiles.map(file => ({ name: file.name })),
+      files: attachedFiles.map((file) => ({ name: file.name })),
     };
-    setMessages(prev => [...prev, userMsg]);
+    setMessages((prev) => [...prev, userMsg]);
 
     const textToSend = userInput;
     setUserInput('');
@@ -218,40 +365,84 @@ export default function ConversationPage() {
     }
     setIsSending(true);
 
+    // If new conversation, add a temporary sidebar item.
+    if (!activeConversationId) {
+      setChatHistory((prev) => [
+        {
+          id: 'temp',
+          title: '...',
+          loading: true,
+        },
+        ...prev,
+      ]);
+    }
+
+    // Insert placeholder bot message.
+    const placeholder = { sender: 'bot', text: 'generating response...', loading: true };
+    setMessages((prev) => [...prev, placeholder]);
+
     try {
-      const token = localStorage.getItem('token');
+      const token = sessionStorage.getItem('token');
+      const formData = new FormData();
+      formData.append('text', textToSend);
+      if (activeConversationId) {
+        formData.append('conversationId', activeConversationId);
+      }
+      attachedFiles.forEach((file) => {
+        formData.append('files', file);
+      });
       const { data } = await axios.post(
         'http://localhost:4000/api/conversation',
-        { text: textToSend, conversationId: activeConversationId },
+        formData,
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
+      // For new conversation, update temporary sidebar item.
       if (!activeConversationId && data.conversationId) {
         setActiveConversationId(data.conversationId);
-        setChatHistory(prev => ([
-          {
-            id: data.conversationId,
-            title: textToSend.substring(0, 20) || 'New Chat'
-          },
-          ...prev
-        ]));
+        sessionStorage.setItem('activeConversationId', data.conversationId);
+        setChatHistory((prev) => {
+          const filtered = prev.filter((item) => item.id !== 'temp');
+          return [
+            {
+              id: data.conversationId,
+              title: data.title || (textToSend.substring(0, 20) || 'New Chat'),
+              loading: false,
+            },
+            ...filtered,
+          ];
+        });
       }
 
-      setMessages(prev => [
-        ...prev,
-        { sender: 'bot', text: data.reply },
-      ]);
+      // Animate typing for bot reply.
+      await simulateTyping(data.reply);
+
+      // Remove loading flag from bot message.
+      setMessages((prev) => {
+        const newMessages = [...prev];
+        newMessages[newMessages.length - 1] = {
+          sender: 'bot',
+          text: newMessages[newMessages.length - 1].text, // fully revealed text
+          loading: false,
+        };
+        return newMessages;
+      });
     } catch (err) {
       console.error('Error sending message:', err);
-      setMessages(prev => [
-        ...prev,
-        { sender: 'bot', text: 'Error in response.' },
-      ]);
+      setMessages((prev) => {
+        const updated = [...prev];
+        updated[updated.length - 1] = {
+          sender: 'bot',
+          text: 'Error in response.',
+          loading: false,
+        };
+        return updated;
+      });
     }
     setIsSending(false);
   };
 
-  // Delete conversation modal actions.
+  // Delete conversation actions.
   const handleDeleteConversation = (chatId) => {
     setChatToDelete(chatId);
     setShowConfirmModal(true);
@@ -259,18 +450,20 @@ export default function ConversationPage() {
 
   const confirmDeleteConversation = async () => {
     try {
-      const token = localStorage.getItem('token');
+      const token = sessionStorage.getItem('token');
       await axios.delete(`http://localhost:4000/api/conversation/${chatToDelete}`, {
-        headers: { Authorization: `Bearer ${token}` }
+        headers: { Authorization: `Bearer ${token}` },
       });
-      setChatHistory(prev => prev.filter(chat => chat.id !== chatToDelete));
+      setChatHistory((prev) =>
+        prev.filter((chat) => chat.id !== chatToDelete)
+      );
       if (activeConversationId === chatToDelete) {
         setActiveConversationId(null);
         setMessages([]);
       }
     } catch (error) {
-      console.error("Error deleting conversation:", error);
-      alert("Error deleting conversation.");
+      console.error('Error deleting conversation:', error);
+      alert('Error deleting conversation.');
     } finally {
       setShowConfirmModal(false);
       setChatToDelete(null);
@@ -282,10 +475,9 @@ export default function ConversationPage() {
     setChatToDelete(null);
   };
 
-  // Start voice recording using Web Audio API with production-ready logic.
+  // Start voice recording.
   const handleStartRecording = async () => {
     setIsRecording(true);
-    // Reset the ref on recording start.
     audioChunksRef.current = [];
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -298,7 +490,6 @@ export default function ConversationPage() {
       const mediaRecorder = new MediaRecorder(stream, options);
       mediaRecorderRef.current = mediaRecorder;
 
-      // Collect audio data into the ref.
       mediaRecorder.ondataavailable = (event) => {
         if (event.data && event.data.size > 0) {
           audioChunksRef.current.push(event.data);
@@ -306,7 +497,7 @@ export default function ConversationPage() {
       };
 
       mediaRecorder.onerror = (event) => {
-        console.error("MediaRecorder error:", event.error);
+        console.error('MediaRecorder error:', event.error);
       };
 
       mediaRecorder.start();
@@ -327,7 +518,7 @@ export default function ConversationPage() {
     }
   };
 
-  // Stop recording and send the audio file for transcription.
+  // Stop recording and send audio for transcription.
   const handleStopRecording = () => {
     setIsRecording(false);
     if (animationFrameIdRef.current) {
@@ -337,34 +528,31 @@ export default function ConversationPage() {
       audioContextRef.current.close();
     }
     setVisualiserData([]);
+
     if (!mediaRecorderRef.current) return;
 
-    // Attach onstop handler before stopping.
     mediaRecorderRef.current.onstop = async () => {
       const audioData = audioChunksRef.current;
       const chunkType = audioData[0]?.type || 'audio/webm';
       const extension = chunkType.includes('wav') ? 'wav' : 'webm';
       const audioBlob = new Blob(audioData, { type: chunkType });
       console.log('Audio Blob size:', audioBlob.size);
-
       if (audioBlob.size === 0) {
-        console.error("Error: Captured audio is empty. Please try recording again.");
+        console.error('Error: Captured audio is empty. Please try recording again.');
         return;
       }
-
       const formData = new FormData();
       formData.append('audio', audioBlob, `recording.${extension}`);
       try {
         const response = await axios.post('http://localhost:5000/api/transcribe', formData);
         if (response.data.transcription) {
-          setUserInput(prev => prev + " " + response.data.transcription);
+          setUserInput((prev) => prev + ' ' + response.data.transcription);
         }
       } catch (err) {
         console.error('Transcription error:', err);
       }
     };
 
-    // Stop the MediaRecorder.
     mediaRecorderRef.current.stop();
   };
 
@@ -373,28 +561,15 @@ export default function ConversationPage() {
 
   // Sidebar actions.
   const handleNewChat = () => {
+    stopTTS();
     setMessages([]);
     setActiveConversationId(null);
+    // Clear active conversation from localStorage so that refresh stays on new chat.
+    sessionStorage.removeItem('activeConversationId');
     console.log('New chat initiated');
   };
-
-  const handleSelectChat = async (chatId) => {
-    try {
-      const token = localStorage.getItem('token');
-      const response = await axios.get(`http://localhost:4000/api/conversation/${chatId}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      if (response.data.success) {
-        setActiveConversationId(chatId);
-        setMessages(response.data.conversation.messages);
-      }
-    } catch (error) {
-      console.error("Error fetching conversation: ", error);
-    }
-  };
-
   // Filter chat history based on search query.
-  const filteredChatHistory = chatHistory.filter(chat =>
+  const filteredChatHistory = chatHistory.filter((chat) =>
     chat.title.toLowerCase().includes(chatSearchQuery.toLowerCase())
   );
 
@@ -422,11 +597,7 @@ export default function ConversationPage() {
                 >
                   <LuSearch className="icon" />
                 </button>
-                <button
-                  className="new-chat-btn"
-                  title="New Chat"
-                  onClick={handleNewChat}
-                >
+                <button className="new-chat-btn" title="New Chat" onClick={handleNewChat}>
                   <LuPenLine className="icon" />
                 </button>
               </div>
@@ -435,6 +606,7 @@ export default function ConversationPage() {
               {isChatSearchActive && (
                 <div className="chat-search-container">
                   <input
+                    ref={chatSearchRef}
                     type="text"
                     placeholder="Search chats..."
                     value={chatSearchQuery}
@@ -447,8 +619,11 @@ export default function ConversationPage() {
                 <>
                   <h2 className="chat-history-title">Chat History</h2>
                   <ul className="chat-history">
-                    {chatHistory.map((chat) => (
-                      <li key={chat.id} className="chat-item">
+                    {filteredChatHistory.map((chat) => (
+                      <li
+                        key={chat.id}
+                        className={`chat-item ${chat.id === activeConversationId ? 'active-chat' : ''}`}
+                      >
                         <div
                           className="conversation-title"
                           onClick={() => handleSelectChat(chat.id)}
@@ -462,7 +637,7 @@ export default function ConversationPage() {
                             background: 'none',
                             border: 'none',
                             padding: 0,
-                            cursor: 'pointer'
+                            cursor: 'pointer',
                           }}
                         >
                           <MdOutlineDeleteForever className="icon delete-icon" />
@@ -472,7 +647,7 @@ export default function ConversationPage() {
                   </ul>
                 </>
               ) : (
-                <p style={{ padding: '10px 20px' }}>No chats found</p>
+                <p style={{ padding: '10px 65px' }}>No chats found</p>
               )}
             </div>
           </>
@@ -492,11 +667,7 @@ export default function ConversationPage() {
                 >
                   <LuPanelLeftOpen className="icon" />
                 </button>
-                <button
-                  className="new-chat-btn"
-                  title="New Chat"
-                  onClick={handleNewChat}
-                >
+                <button className="new-chat-btn" title="New Chat" onClick={handleNewChat}>
                   <LuPenLine className="icon" />
                 </button>
                 <h1 className="app-title">UNI-ASK</h1>
@@ -509,11 +680,7 @@ export default function ConversationPage() {
             <span className="matric-display">
               Matriculation Number:&nbsp;<strong>{matricNumber}</strong>
             </span>
-            <button
-              className="dark-mode-btn"
-              title="Toggle Dark Mode"
-              onClick={toggleDarkMode}
-            >
+            <button className="dark-mode-btn" title="Toggle Dark Mode" onClick={toggleDarkMode}>
               {darkMode ? (
                 <PiMoonStarsFill className="icon dark-mode-icon" />
               ) : (
@@ -532,32 +699,48 @@ export default function ConversationPage() {
             <div className="messages-container" ref={messagesContainerRef}>
               {messages.map((msg, idx) => (
                 <div key={idx} className={`message-row ${msg.sender === 'user' ? 'user' : 'bot'}`}>
-                  <div className="message-text">
-                    {msg.text}
-                    {msg.files && msg.files.length > 0 && (
-                      <div className="attached-files-message">
-                        {msg.files.map((file, index) => (
-                          <div key={index} className="attached-file-message">
-                            <span className="file-name">{file.name}</span>
-                          </div>
-                        ))}
+                  <div
+                    className={`message-text ${msg.loading ? 'loading-text' : ''} ${msg.sender === 'bot' ? 'bot-message-container' : ''}`}
+                  >
+                    {msg.sender === 'bot' ? (
+                      <ReactMarkdown>{msg.text}</ReactMarkdown>
+                    ) : (
+                      msg.text
+                    )}
+                    {msg.sender === 'bot' && !msg.loading && (
+                      <div className="bot-actions">
+                        <span className="copy-icon" onClick={() => handleCopy(msg.text, idx)}>
+                          <BiCopy />
+                          {copiedMessageIndex === idx && (
+                            <span className="copied-message">Copied!</span>
+                          )}
+                        </span>
+                        <span
+                          className={`speaker-icon ${ttsActiveMessageId === idx ? 'active' : ''}`}
+                          onClick={() => handleToggleTTS(idx, msg.text)}
+                        >
+                          <IoMdVolumeHigh />
+                        </span>
                       </div>
                     )}
                   </div>
                 </div>
               ))}
+
             </div>
           )}
 
           {/* Input Bar */}
-          <div className={`input-bar ${messages.length > 0 ? 'bottom' : 'centered'}`}>
+          <div className={`input-bar ${messages.length > 0 ? 'bottom' : 'centered'} ${activeConversationId ? 'no-animation' : ''}`}>
             {attachedFiles.length > 0 && (
               <div className="attached-files">
                 {attachedFiles.map((file, idx) => (
-                  <div key={idx} className="attached-file">
-                    <span className="file-name">{file.name}</span>
-                    <button className="remove-file" onClick={() => removeFile(idx)}>Remove</button>
-                  </div>
+                  <FileAttachment
+                    key={idx}
+                    file={file}
+                    removable={true}
+                    onRemove={() => removeFile(idx)}
+                  />
                 ))}
               </div>
             )}
@@ -578,12 +761,12 @@ export default function ConversationPage() {
             )}
             <div className="buttons-row">
               <div className="left-controls">
-                <label className="file-label" htmlFor="file-input" title="Add a file (PDF/TXT/JPG)">
+                <label className="file-label" htmlFor="file-input" title="Add a file (PDF/TXT/JPG/PNG)">
                   <CgAdd className="icon plus-icon" />
                   <input
                     id="file-input"
                     type="file"
-                    accept=".pdf,.txt,.jpeg,.jpg"
+                    accept=".pdf,.txt,.jpeg,.jpg,.png"
                     onChange={handleFileChange}
                     style={{ display: 'none' }}
                   />
@@ -601,7 +784,13 @@ export default function ConversationPage() {
                 {isRecording && (
                   <div className="audio-visualiser">
                     {visualiserData.map((value, index) => (
-                      <div key={index} className="visualiser-bar" style={{ height: `${Math.min((value / 255) * 150, 100)}%` }}></div>
+                      <div
+                        key={index}
+                        className="visualiser-bar"
+                        style={{
+                          height: `${Math.min((value / 255) * 150, 100)}%`,
+                        }}
+                      ></div>
                     ))}
                   </div>
                 )}
@@ -638,8 +827,12 @@ export default function ConversationPage() {
             <h3>Confirm Delete</h3>
             <p>Are you sure you want to delete this conversation?</p>
             <div>
-              <button className="confirm-btn" onClick={confirmDeleteConversation}>Delete</button>
-              <button className="cancel-btn" onClick={cancelDeleteConversation}>Cancel</button>
+              <button className="confirm-btn" onClick={confirmDeleteConversation}>
+                Delete
+              </button>
+              <button className="cancel-btn" onClick={cancelDeleteConversation}>
+                Cancel
+              </button>
             </div>
           </div>
         </div>
