@@ -18,6 +18,7 @@
 /build
 
 # misc
+/server/uploads
 /server/.env
 .DS_Store
 .env.local
