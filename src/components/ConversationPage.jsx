@@ -653,7 +653,7 @@ export default function ConversationPage() {
                   </ul>
                 </>
               ) : (
-                <p style={{ padding: '10px 65px' }}>No chats found</p>
+                <p style={{ padding: '10px 10px' }}>No chats found</p>
               )}
             </div>
           </>
@@ -688,9 +688,9 @@ export default function ConversationPage() {
             </span>
             <button className="dark-mode-btn" title="Toggle Dark Mode" onClick={toggleDarkMode}>
               {darkMode ? (
-                <PiMoonStarsFill className="icon dark-mode-icon" />
-              ) : (
                 <TiWeatherSunny className="icon dark-mode-icon" />
+              ) : (
+                <PiMoonStarsFill className="icon dark-mode-icon" />
               )}
             </button>
             <button className="logout-btn" title="Logout" onClick={handleLogout}>
