@@ -1,3 +1,6 @@
+/* Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital.wgt@0,400;0,700;0,900;1,400;1,700&display=swap');
+
 /* Define default (light mode) colors as CSS variables */
 :root {
   --bg-color: #fff;
@@ -13,6 +16,8 @@
   --button-hover-bg: #eee;
   --scroll-bar-color: rgb(223, 223, 223);
   --chat-item-select-color: #e0e0e0;
+  --app-titel-color:rgb(104, 104, 104);
+  --app-logo-color: invert(22%) sepia(11%) saturate(1173%) hue-rotate(161deg) brightness(95%) contrast(85%);
 }
 
 /* Apply the CSS variables on html and body */
@@ -21,7 +26,7 @@ body {
   margin: 0;
   padding: 0;
   height: 100%;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-family: 'Roboto', sans-serif;
   background-color: var(--bg-color);
   color: var(--text-color);
 }
@@ -41,6 +46,8 @@ body.dark-mode {
   --button-hover-bg: #5c5c5c;
   --scroll-bar-color: #242424;
   --chat-item-select-color: #3a3a3a;
+  --app-titel-color:rgb(241, 241, 241);
+  --app-logo-color: invert(100%) sepia(1%) saturate(3%) hue-rotate(5deg) brightness(103%) contrast(100%);
 }
 
 /* Conversation Page Container */
@@ -60,12 +67,12 @@ body.dark-mode {
   justify-content: space-between;
   align-items: center;
   padding: 0 20px;
-  /* Vertical padding is handled via fixed height */
   background-color: var(--top-nav-bg);
   height: 46px;
 }
 
 .app-title {
+  color: var(--app-titel-color);
   margin: 0;
   font-size: 1.2rem;
   font-weight: 640;
@@ -120,7 +127,7 @@ body.dark-mode {
 .sidebar-header {
   display: flex;
   align-items: center;
-  padding: 0 8px;
+  padding: 0px 23px;
   background-color: inherit;
   height: 44px;
 }
@@ -134,6 +141,29 @@ body.dark-mode {
   align-items: center;
   gap: 10px;
   margin-left: auto;
+}
+
+.sidebar-logo-title {
+  display: flex;
+  align-items: center;
+  margin-top: -15px;
+  padding: 0px 8px;
+  margin-bottom: 10px;
+}
+
+.sidebar-logo {
+  filter: var(--app-logo-color);
+  width: 30px;
+  height: 30px;
+  margin-left:-2px;
+  margin-right: 5px;
+  object-fit:cover; /* Adjust as needed */
+}
+
+.sidebar-title {
+  font-size: 1.2rem;
+  font-weight:bolder;
+  color: var(--text-color);
 }
 
 /* Button styles for sidebar header icons */
@@ -174,9 +204,6 @@ body.dark-mode {
   scrollbar-color: var(--scroll-bar-color) var(--sidebar-bg);
 }
 
-/* -------------------------------
-   Chat History List & Chat Item
---------------------------------- */
 .chat-history {
   list-style: none;
   padding: 0;
@@ -215,16 +242,13 @@ body.dark-mode {
 /* Ensure the conversation title takes up the available space */
 .conversation-title {
   flex: 1;
-  font-size: 0.97rem;
+  font-size: 0.92rem;
   color: var(--text-color);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-/* -------------------------------
-   Delete Icon Container & Icon
---------------------------------- */
 /* Reserve fixed space for the delete icon, so layout remains constant */
 .delete-icon-container {
   width: 30px;
@@ -759,8 +783,8 @@ body.dark-mode {
 .copy-icon,
 .speaker-icon {
   cursor: pointer;
-  font-size: 1.2em;
-  opacity: 0.7;
+  font-size: 1em;
+  opacity: 0.6;
   transition: opacity 0.2s ease;
 }
 
@@ -775,7 +799,7 @@ body.dark-mode {
   right: 0;
   background-color: rgba(0, 0, 0, 0.75);
   color: #fff;
-  font-size: 0.75em;
+  font-size: 0.6em;
   padding: 2px 6px;
   border-radius: 5px;
   white-space: nowrap;
@@ -785,5 +809,5 @@ body.dark-mode {
 /* When the speaker is active (tts running), highlight it */
 .speaker-icon.active {
   color: #0055af;
-  /* Example highlight color */
+
 }

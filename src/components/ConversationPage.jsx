@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import ReactMarkdown from 'react-markdown'; // For rendering markdown in bot responses
+import ReactMarkdown from 'react-markdown';
 import './ConversationPage.css';
 import FileAttachment from './FileAttachment';
 
@@ -23,6 +23,7 @@ import {
   LuPanelLeftOpen,
 } from 'react-icons/lu';
 import { MdOutlineDeleteForever } from 'react-icons/md';
+
 
 export default function ConversationPage() {
   // State declarations
@@ -309,7 +310,8 @@ export default function ConversationPage() {
     const newValue = !searchMode;
     setSearchMode(newValue);
     try {
-      await axios.post('/api/search-toggle', { searchMode: newValue });
+      // Use an absolute URL with credentials enabled
+      await axios.post('http://localhost:5000/api/search-toggle', { searchMode: newValue });
     } catch (err) {
       console.error('Search toggle error:', err);
     }
@@ -341,7 +343,7 @@ export default function ConversationPage() {
           clearInterval(typingInterval);
           resolve();
         }
-      }, 0.001); // Adjust speed as needed.
+      }, 0.01); // Adjust speed as needed.
     });
   };
 
@@ -603,6 +605,10 @@ export default function ConversationPage() {
               </div>
             </div>
             <div className="sidebar-content">
+              <div className="sidebar-logo-title">
+                <img src="../favicon.svg" alt="Logo" className="sidebar-logo" />
+                <span className="sidebar-title">Uni-Ask</span>
+              </div>
               {isChatSearchActive && (
                 <div className="chat-search-container">
                   <input
@@ -623,10 +629,10 @@ export default function ConversationPage() {
                       <li
                         key={chat.id}
                         className={`chat-item ${chat.id === activeConversationId ? 'active-chat' : ''}`}
+                        onClick={() => handleSelectChat(chat.id)}
                       >
                         <div
                           className="conversation-title"
-                          onClick={() => handleSelectChat(chat.id)}
                         >
                           {chat.title}
                         </div>
@@ -670,10 +676,10 @@ export default function ConversationPage() {
                 <button className="new-chat-btn" title="New Chat" onClick={handleNewChat}>
                   <LuPenLine className="icon" />
                 </button>
-                <h1 className="app-title">UNI-ASK</h1>
+                <h1 className="app-title">Uni-Ask Multimodal AI</h1>
               </div>
             ) : (
-              <h1 className="app-title">UNI-ASK</h1>
+              <h1 className="app-title">Uni-Ask Multimodal AI</h1>
             )}
           </div>
           <div className="nav-right">

@@ -94,7 +94,7 @@ function AuthForm() {
       }
       setErrorMessage('');
       setSuccessMessage('');
-  
+
       const response = await fetch('http://localhost:4000/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -104,20 +104,20 @@ function AuthForm() {
         }),
       });
       const data = await response.json();
-  
+
       if (!data.success) {
         setErrorMessage(data.message || 'Login failed. Please try again.');
         setSuccessMessage('');
         return;
       }
-  
+
       // SUCCESS: Save token and matric number in sessionstorage
       sessionStorage.setItem('token', data.token);
       sessionStorage.setItem('matricNumber', data.user.matricNumber);
-  
+
       setErrorMessage('');
       setSuccessMessage('Login successful!');
-  
+
       // Redirect to conversation page
       navigate('/conversation');
     } catch (err) {
@@ -389,7 +389,10 @@ function AuthForm() {
   return (
     <div className="auth-form-wrapper">
       <div className="auth-form-header">
-        <div className="auth-form-logo">AI Conversation</div>
+        <div className="logo-title">
+          <img src="../favicon.svg" alt="Logo" className="logo" />
+          <span className="title">Uni-Ask</span>
+        </div>
         {mode === 'login' && <h2>Sign In</h2>}
         {mode === 'signup' && <h2>Create your account</h2>}
         {mode === 'forgot' && <h2>Reset your password</h2>}
