@@ -29,7 +29,6 @@ def main():
     inv_label_map = {
         0: "RAG Search",
         1: "web search",
-
     }
     print("Model loaded. Enter text to classify the intent or type 'exit' to quit.")
     while True:

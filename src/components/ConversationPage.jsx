@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import ReactMarkdown from 'react-markdown';
 import './ConversationPage.css';
 import FileAttachment from './FileAttachment';
 
@@ -23,6 +22,7 @@ import {
   LuPanelLeftOpen,
 } from 'react-icons/lu';
 import { MdOutlineDeleteForever } from 'react-icons/md';
+import MarkdownRenderer from './MarkdownRenderer';
 
 
 export default function ConversationPage() {
@@ -372,7 +372,7 @@ export default function ConversationPage() {
       setChatHistory((prev) => [
         {
           id: 'temp',
-          title: '...',
+          title: '.....',
           loading: true,
         },
         ...prev,
@@ -686,7 +686,7 @@ export default function ConversationPage() {
             <span className="matric-display">
               Matriculation Number:&nbsp;<strong>{matricNumber}</strong>
             </span>
-            <button className="dark-mode-btn" title="Toggle Dark Mode" onClick={toggleDarkMode}>
+            <button className="dark-mode-btn" title="Toggle to Dark/Light Mode" onClick={toggleDarkMode}>
               {darkMode ? (
                 <TiWeatherSunny className="icon dark-mode-icon" />
               ) : (
@@ -709,7 +709,7 @@ export default function ConversationPage() {
                     className={`message-text ${msg.loading ? 'loading-text' : ''} ${msg.sender === 'bot' ? 'bot-message-container' : ''}`}
                   >
                     {msg.sender === 'bot' ? (
-                      <ReactMarkdown>{msg.text}</ReactMarkdown>
+                      <MarkdownRenderer content={msg.text} />
                     ) : (
                       msg.text
                     )}

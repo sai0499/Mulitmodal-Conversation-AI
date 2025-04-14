@@ -152,12 +152,12 @@ body.dark-mode {
 }
 
 .sidebar-logo {
-  filter: var(--app-logo-color);
+  /*filter: var(--app-logo-color);*/
   width: 30px;
   height: 30px;
   margin-left:-2px;
   margin-right: 5px;
-  object-fit:cover; /* Adjust as needed */
+  object-fit: fill; /* Adjust as needed */
 }
 
 .sidebar-title {
@@ -365,7 +365,6 @@ body.dark-mode {
   position: absolute;
   top: 0;
   bottom: 130px;
-  /* Reserve space for the input bar */
   left: 0;
   right: 0;
   overflow-y: auto;
@@ -407,6 +406,7 @@ body.dark-mode {
 
 .message-row.bot .message-text {
   background-color: var(--bot-message-bg);
+  max-width: 67%;
 }
 
 /* Message Attachments */
@@ -494,6 +494,7 @@ body.dark-mode {
   border-radius: 13px;
   padding: 6px 8px;
   font-size: 1rem;
+  font-family: 'Roboto', sans-serif;
   line-height: 24px;
   max-height: 120px;
   overflow-y: hidden;
@@ -693,70 +694,49 @@ body.dark-mode {
   }
 
   50% {
-    opacity: 0.5;
+    opacity: 0.1;
   }
 }
 
-/* Styling for paragraphs remains compact */
-.conversation-page .message-text p {
+/* Paragraphs: reduce margins between lines */
+.markdown-paragraph {
+  margin-top: 0.3em;
+  margin-bottom: 0.3em;
+  line-height: 1.4;
+}
+
+/* Headings: slight spacing adjustments */
+.markdown-heading {
+  margin-top: 0.4em;
+  margin-bottom: 0.2em;
+  font-weight: 600;
+}
+
+/* Unordered and ordered lists: tighter vertical spacing */
+.markdown-ul,
+.markdown-ol {
   margin-top: 0.1em;
   margin-bottom: 0.1em;
-  line-height: 1.2;
+  padding-left: 1.5em;
 }
 
-/* Increase font sizes for larger headings and keep margins tight */
-.conversation-page .message-text h1 {
-  font-size: 2em;
-  /* Larger size for h1 */
-  margin-top: 0.1em;
-  margin-bottom: 0.05em;
-  font-weight: 600;
-  line-height: 1.2;
-}
-
-.conversation-page .message-text h2 {
-  font-size: 1.8em;
-  /* Larger size for h2 */
-  margin-top: 0.1em;
-  margin-bottom: 0.05em;
-  font-weight: 600;
-  line-height: 1.2;
-}
-
-.conversation-page .message-text h3 {
-  font-size: 1.6em;
-  /* Slightly smaller but still larger than normal text */
-  margin-top: 0.1em;
-  margin-bottom: 0.05em;
-  font-weight: 600;
-  line-height: 1.2;
-}
-
-/* Optional: Adjust headings h4, h5, and h6 if needed */
-.conversation-page .message-text h4 {
-  font-size: 1.4em;
-  margin-top: 0.1em;
-  margin-bottom: 0.05em;
-  font-weight: 600;
-  line-height: 1.2;
-}
-
-.conversation-page .message-text h5,
-.conversation-page .message-text h6 {
-  font-size: 1.2em;
-  margin-top: 0.1em;
-  margin-bottom: 0.05em;
-  font-weight: 600;
-  line-height: 1.2;
-}
-
-/* Further reduce margins for list elements */
-.conversation-page .message-text ul,
-.conversation-page .message-text ol {
+/* List items: reduce space between items */
+.markdown-list-item {
   margin-top: 0.1em;
   margin-bottom: 0.1em;
-  padding-left: 1em;
+  line-height: 1.3;
 }
+
+/* Links: maintain a clear look with a slight emphasis */
+.markdown-link {
+  color: #1a73e8;
+  text-decoration: none;
+}
+
+.markdown-link:hover {
+  text-decoration: underline;
+}
+
 
 /* Ensure the container is positioned relative so that absolute positioning works */
 .bot-message-container {

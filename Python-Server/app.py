@@ -69,9 +69,13 @@ def gemini_endpoint():
             else:
                 serp_context = json.dumps(serp_data)
                 full_prompt = (
+                    f"Role: You are a AI Assistant that helps students in any University related questions.\n\n"
                     f"User Query: {query}\n\n"
                     f"Web Search Results: {serp_context}\n\n"
-                    "Based on the above, generate a helpful and concise response with relevant web links."
+                    "Based on the above, generate a helpful and concise response with relevant web links. "
+                    "Say that you do not the answer if the context does not provide any relevant information related to the query."
+                    "Avoid the context for any general questions like greetings or 'who are you?' questions or goodbyes and answer in a general way. "
+                    
                 )
             intent = "web search"
         else:
@@ -90,15 +94,27 @@ def gemini_endpoint():
                 else:
                     serp_context = json.dumps(serp_data)
                     full_prompt = (
+                        f"Role: You are a AI Assistant name Lucy in Uni-Ask who helps students in any University related questions.\n\n"
                         f"User Query: {query}\n\n"
                         f"Web Search Results: {serp_context}\n\n"
                         "Based on the above, generate a helpful and concise response with relevant web links."
+                        "Say that you do not the answer if the context does not provide any relevant information related to the query."
+                        "Avoid the context for any general questions like greetings or 'who are you?' questions or goodbyes and answer in a general way. "
+
                     )
             else:
-                full_prompt = query
+                full_prompt = ("Role: You are a AI Assistant that helps students in any University related questions.\n\n "
+                               f"User Query: {query}\n\n"
+                               "Say that you do not the answer if the context does not provide any relevant information related to the query. "
+                               "Avoid the context for any general questions like greetings or 'who are you?' questions or goodbyes and answer in a general way. "
+                               
+                               "Based on the above, generate a helpful and concise response. "
+                               )
+
 
         # Query the Gemini API with the composed prompt.
         response_text = query_gemini_api(full_prompt)
+        print(response_text)
         return jsonify({"reply": response_text, "intent": intent}), 200
 
     except Exception as e:

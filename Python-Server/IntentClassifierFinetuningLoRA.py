@@ -63,7 +63,7 @@ def main():
     # Paths and hyperparameters
     dataset_path = "D:/Human Centered NLP/conversation-ai/SyntheticDatasetforIntentClassifier/Intent_Classifier_Dataset - Processed.csv"
     output_dir = "./intent_model_lora"
-    num_epochs = 3
+    num_epochs = 5
     train_batch_size = 8
     eval_batch_size = 8
     learning_rate = 2e-5
