@@ -5,7 +5,7 @@ import './ConversationPage.css';
 import FileAttachment from './FileAttachment';
 
 // Import icons from react-icons
-import { CgAdd, CgLogOut } from 'react-icons/cg';
+import { CgAdd, CgLogIn } from 'react-icons/cg';
 import { IoArrowUpCircle } from 'react-icons/io5';
 import { VscGlobe } from 'react-icons/vsc';
 import { FaRegCircleStop } from 'react-icons/fa6';
@@ -14,6 +14,8 @@ import { TiWeatherSunny } from 'react-icons/ti';
 import { PiMoonStarsFill } from 'react-icons/pi';
 import { BiCopy } from 'react-icons/bi';
 import { IoMdVolumeHigh } from 'react-icons/io';
+import { TbApi } from 'react-icons/tb';
+import { FaCheckCircle } from 'react-icons/fa';
 
 import {
   LuPenLine,
@@ -23,7 +25,6 @@ import {
 } from 'react-icons/lu';
 import { MdOutlineDeleteForever } from 'react-icons/md';
 import MarkdownRenderer from './MarkdownRenderer';
-
 
 export default function ConversationPage() {
   // State declarations
@@ -37,6 +38,13 @@ export default function ConversationPage() {
   const [darkMode, setDarkMode] = useState(false);
   const [isSending, setIsSending] = useState(false);
   const [activeConversationId, setActiveConversationId] = useState(null);
+
+  const [userApiKey, setUserApiKey] = useState('');
+  const [showApiKeyModal, setShowApiKeyModal] = useState(false);
+  const [newApiKey, setNewApiKey] = useState('');
+
+  const [apiKeySaved, setApiKeySaved] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   // For web search mode in chat area
   const [searchMode, setSearchMode] = useState(false);
@@ -74,6 +82,24 @@ export default function ConversationPage() {
     }
   }, [navigate]);
 
+  // On mount, fetch the user’s API key from the backend.
+  useEffect(() => {
+    const fetchApiKey = async () => {
+      try {
+        const token = sessionStorage.getItem('token');
+        const response = await axios.get('http://localhost:4000/api/user/apiKey', {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (response.data.success && response.data.apiKey) {
+          setUserApiKey(response.data.apiKey);
+        }
+      } catch (error) {
+        console.error('Error fetching API key:', error);
+      }
+    };
+    fetchApiKey();
+  }, []);
+
   // On mount, load activeConversationId from localStorage and fetch its messages
   useEffect(() => {
     const storedActiveConversationId = sessionStorage.getItem('activeConversationId');
@@ -105,7 +131,6 @@ export default function ConversationPage() {
     // Clear the copy status after 3 seconds
     setTimeout(() => setCopiedMessageIndex(null), 3000);
   };
-
 
   const handleToggleTTS = (idx, text) => {
     if (ttsActiveMessageId === idx) {
@@ -307,10 +332,13 @@ export default function ConversationPage() {
 
   // Toggle web search mode.
   const toggleSearch = async () => {
+    if (!userApiKey) {
+      alert('No API key is added for online search.');
+      return;
+    }
     const newValue = !searchMode;
     setSearchMode(newValue);
     try {
-      // Use an absolute URL with credentials enabled
       await axios.post('http://localhost:5000/api/search-toggle', { searchMode: newValue });
     } catch (err) {
       console.error('Search toggle error:', err);
@@ -326,15 +354,21 @@ export default function ConversationPage() {
   // Helper function: simulate typing animation for bot responses.
   const simulateTyping = (fullText) => {
     return new Promise((resolve) => {
+      // Remove the blinking effect as soon as typing simulation begins.
+      setMessages((prevMessages) => {
+        const newMessages = [...prevMessages];
+        if (newMessages.length > 0 && newMessages[newMessages.length - 1].loading) {
+          newMessages[newMessages.length - 1].loading = false;
+        }
+        return newMessages;
+      });
+
       let index = 0;
       const typingInterval = setInterval(() => {
         index++;
         setMessages((prevMessages) => {
           const newMessages = [...prevMessages];
-          if (
-            newMessages.length > 0 &&
-            newMessages[newMessages.length - 1].loading
-          ) {
+          if (newMessages.length > 0) {
             newMessages[newMessages.length - 1].text = fullText.substring(0, index);
           }
           return newMessages;
@@ -343,7 +377,7 @@ export default function ConversationPage() {
           clearInterval(typingInterval);
           resolve();
         }
-      }, 0.01); // Adjust speed as needed.
+      }, 10); // Adjust the delay as needed for a natural typing speed.
     });
   };
 
@@ -424,7 +458,7 @@ export default function ConversationPage() {
         const newMessages = [...prev];
         newMessages[newMessages.length - 1] = {
           sender: 'bot',
-          text: newMessages[newMessages.length - 1].text, // fully revealed text
+          text: newMessages[newMessages.length - 1].text,
           loading: false,
         };
         return newMessages;
@@ -570,10 +604,44 @@ export default function ConversationPage() {
     sessionStorage.removeItem('activeConversationId');
     console.log('New chat initiated');
   };
+
   // Filter chat history based on search query.
   const filteredChatHistory = chatHistory.filter((chat) =>
     chat.title.toLowerCase().includes(chatSearchQuery.toLowerCase())
   );
+
+  const handleSaveApiKey = async () => {
+    if (!newApiKey.trim()) {
+      setErrorMessage('API Key cannot be empty.');
+      return;
+    }
+    try {
+      const token = sessionStorage.getItem('token');
+      const response = await axios.post(
+        'http://localhost:4000/api/user/apiKey',
+        { apiKey: newApiKey },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      if (response.data.success) {
+        setUserApiKey(response.data.apiKey);
+        setNewApiKey('');
+        setErrorMessage('');
+        // Set success state to true to display the green tick
+        setApiKeySaved(true);
+        // Close modal after 2 seconds and clear the success indicator
+        setTimeout(() => {
+          setApiKeySaved(false);
+          setShowApiKeyModal(false);
+        }, 2000);
+      } else {
+        setErrorMessage('Error updating API key: ' + response.data.message);
+      }
+    } catch (error) {
+      console.error('Error updating API key:', error);
+      setErrorMessage('Error updating API key');
+    }
+  };
+  // ------------------------------------------------
 
   return (
     <div className={`conversation-page ${darkMode ? 'dark-mode' : ''}`}>
@@ -631,9 +699,7 @@ export default function ConversationPage() {
                         className={`chat-item ${chat.id === activeConversationId ? 'active-chat' : ''}`}
                         onClick={() => handleSelectChat(chat.id)}
                       >
-                        <div
-                          className="conversation-title"
-                        >
+                        <div className="conversation-title">
                           {chat.title}
                         </div>
                         <button
@@ -686,6 +752,14 @@ export default function ConversationPage() {
             <span className="matric-display">
               Matriculation Number:&nbsp;<strong>{matricNumber}</strong>
             </span>
+            {/* API Key Button */}
+            <button
+              className="api-key-btn"
+              title="Add API Key"
+              onClick={() => setShowApiKeyModal(true)}
+            >
+              <TbApi className="icon" />
+            </button>
             <button className="dark-mode-btn" title="Toggle to Dark/Light Mode" onClick={toggleDarkMode}>
               {darkMode ? (
                 <TiWeatherSunny className="icon dark-mode-icon" />
@@ -694,7 +768,7 @@ export default function ConversationPage() {
               )}
             </button>
             <button className="logout-btn" title="Logout" onClick={handleLogout}>
-              <CgLogOut className="icon logout-icon" />
+              <CgLogIn className="icon logout-icon" />
             </button>
           </div>
         </div>
@@ -732,7 +806,6 @@ export default function ConversationPage() {
                   </div>
                 </div>
               ))}
-
             </div>
           )}
 
@@ -826,7 +899,7 @@ export default function ConversationPage() {
         </div>
       </div>
 
-      {/* Custom Confirmation Modal */}
+      {/* Delete Conversation Confirmation Modal */}
       {showConfirmModal && (
         <div className="confirm-modal-overlay">
           <div className="confirm-modal">
@@ -843,6 +916,45 @@ export default function ConversationPage() {
           </div>
         </div>
       )}
+
+      {/* API Key Modal */}
+      {showApiKeyModal && (
+        <div className="confirm-modal-overlay">
+          <div className="confirm-modal">
+            {apiKeySaved ? (
+              // Show success UI with a green tick and success message.
+              <div className="api-key-success" style={{ textAlign: 'center' }}>
+                <FaCheckCircle size={48} color="green" />
+                <p style={{ marginTop: '10px' }}>API key updated successfully.</p>
+              </div>
+            ) : (
+              <>
+                <h3>Add API Key</h3>
+                <input
+                  type="text"
+                  value={newApiKey}
+                  onChange={(e) => {
+                    setNewApiKey(e.target.value);
+                    setErrorMessage('');
+                  }}
+                  placeholder="Enter your SerpAPI Key"
+                  style={{ width: '90%', padding: '8px', marginBottom: '20px' }}
+                />
+                {errorMessage && (
+                  <p className="error-message" style={{ color: 'red', marginBottom: '10px' }}>
+                    {errorMessage}
+                  </p>
+                )}
+                <div>
+                  <button className="confirm-btn" onClick={handleSaveApiKey}>Save</button>
+                  <button className="cancel-btn" onClick={() => setShowApiKeyModal(false)}>Cancel</button>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }

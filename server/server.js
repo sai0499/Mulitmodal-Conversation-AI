@@ -4,6 +4,7 @@ const cors = require('cors');
 const connectDB = require('./config/db');
 const authRoutes = require('./routes/authRoutes');
 const conversationRoutes = require('./routes/conversationRoutes');
+const userRoutes = require('./routes/userRoutes'); // New user routes
 
 const app = express();
 
@@ -16,7 +17,8 @@ connectDB(process.env.MONGO_URI);
 
 // Setup routes
 app.use('/api/auth', authRoutes);
-app.use('/api', conversationRoutes);  // Conversations endpoint(s)
+app.use('/api', conversationRoutes);  // Conversation endpoints
+app.use('/api/user', userRoutes);       // User API key endpoints
 
 // Test route
 app.get('/', (req, res) => {

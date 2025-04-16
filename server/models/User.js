@@ -1,3 +1,4 @@
+// models/User.js
 const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
@@ -14,10 +15,14 @@ const userSchema = new mongoose.Schema({
     type: String,
   },
   otpCode: {
-    type: String, // We'll store it in plain or hashed form (see below)
+    type: String,
   },
   otpExpiry: {
     type: Date,
+  },
+  apiKey: {
+    type: String,
+    default: null, // New field for storing the API key
   },
   createdAt: {
     type: Date,

@@ -1,6 +1,7 @@
 const fs = require('fs');
-const axios = require('axios'); // Used to call the Gemini API endpoints.
+const axios = require('axios');
 const Conversation = require('../models/Conversation');
+const User = require('../models/User');
 
 /**
  * GET /api/conversations
@@ -19,9 +20,9 @@ exports.getConversations = async (req, res) => {
 
 /**
  * POST /api/conversation
- * Creates (or updates) a conversation by adding the user's message,
+ * Creates (or updates) a conversation by appending the user's message,
  * generating a bot reply via the Gemini API, and saving both in the database.
- * Optionally, a conversationId can be passed to append to an existing conversation.
+ * A conversationId may be passed in to append a message to an existing conversation.
  * Supports file uploads via multer.
  */
 exports.sendMessage = async (req, res) => {
@@ -41,12 +42,12 @@ exports.sendMessage = async (req, res) => {
       }
     } else {
       conversation = new Conversation({ user: userId, messages: [] });
-      // Smart conversation title generation using Gemini API.
+      // Generate a conversation title using the Gemini API.
       try {
         const titlePrompt = `Generate a concise and descriptive title for a conversation based on the following user message: "${text}". Give me only the title as reply.`;
         const geminiTitleResponse = await axios.post(
           'http://localhost:5000/api/gemini',
-          { text: titlePrompt },
+          { text: titlePrompt, skipApiKeyValidation: true },
           { headers: { 'Content-Type': 'application/json' } }
         );
         conversation.title = geminiTitleResponse.data.reply;
@@ -56,7 +57,7 @@ exports.sendMessage = async (req, res) => {
       }
     }
 
-    // Process attached files (if any) provided by multer.
+    // Process attached files if any (provided by multer)
     const attachedFiles = req.files
       ? req.files.map(file => ({
           name: file.filename,
@@ -68,13 +69,23 @@ exports.sendMessage = async (req, res) => {
     // Append the user's message (with file details) to the conversation.
     conversation.messages.push({ sender: 'user', text, files: attachedFiles });
 
-    // Generate bot reply using Gemini API.
+    // Retrieve the user's encrypted API key from the database.
+    const userDoc = await User.findById(userId).select('apiKey');
+    const encryptedApiKey = (userDoc && userDoc.apiKey) ? userDoc.apiKey : null;
+
+    // Generate the bot reply using the Gemini API.
+    // The encrypted API key is sent to the Gemini endpoint, which will decrypt it before using it.
     let botReply = '';
     try {
       const geminiResponse = await axios.post(
         'http://localhost:5000/api/gemini',
         { text },
-        { headers: { 'Content-Type': 'application/json' } }
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'X-User-ApiKey': encryptedApiKey
+          }
+        }
       );
       botReply = geminiResponse.data.reply;
     } catch (err) {
@@ -102,7 +113,7 @@ exports.sendMessage = async (req, res) => {
 
 /**
  * GET /api/conversation/:id
- * Returns a conversation (with full message history) for the authenticated user.
+ * Returns a single conversation (including its full message history) for the authenticated user.
  */
 exports.getConversationById = async (req, res) => {
   try {
@@ -121,8 +132,8 @@ exports.getConversationById = async (req, res) => {
 
 /**
  * DELETE /api/conversation/:id
- * Deletes a conversation (with all its messages) for the authenticated user.
- * Also deletes all files associated with the conversation from the uploads folder.
+ * Deletes a conversation (including all its messages) for the authenticated user.
+ * Also removes any associated files from disk.
  */
 exports.deleteConversation = async (req, res) => {
   try {
@@ -133,7 +144,7 @@ exports.deleteConversation = async (req, res) => {
       return res.status(404).json({ success: false, message: 'Conversation not found' });
     }
 
-    // Delete associated files from disk.
+    // Remove associated files from disk.
     conversation.messages.forEach(message => {
       if (message.files && message.files.length > 0) {
         message.files.forEach(file => {

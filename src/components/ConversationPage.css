@@ -1,6 +1,3 @@
-/* Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Roboto:ital.wgt@0,400;0,700;0,900;1,400;1,700&display=swap');
-
 /* Define default (light mode) colors as CSS variables */
 :root {
   --bg-color: #fff;
@@ -16,7 +13,7 @@
   --button-hover-bg: #eee;
   --scroll-bar-color: rgb(223, 223, 223);
   --chat-item-select-color: #e0e0e0;
-  --app-titel-color:rgb(104, 104, 104);
+  --app-titel-color: rgb(104, 104, 104);
   --app-logo-color: invert(22%) sepia(11%) saturate(1173%) hue-rotate(161deg) brightness(95%) contrast(85%);
 }
 
@@ -46,7 +43,7 @@ body.dark-mode {
   --button-hover-bg: #5c5c5c;
   --scroll-bar-color: #242424;
   --chat-item-select-color: #3a3a3a;
-  --app-titel-color:rgb(241, 241, 241);
+  --app-titel-color: rgb(241, 241, 241);
   --app-logo-color: invert(100%) sepia(1%) saturate(3%) hue-rotate(5deg) brightness(103%) contrast(100%);
 }
 
@@ -155,14 +152,15 @@ body.dark-mode {
   /*filter: var(--app-logo-color);*/
   width: 30px;
   height: 30px;
-  margin-left:-2px;
+  margin-left: -2px;
   margin-right: 5px;
-  object-fit: fill; /* Adjust as needed */
+  object-fit: fill;
+  /* Adjust as needed */
 }
 
 .sidebar-title {
   font-size: 1.2rem;
-  font-weight:bolder;
+  font-weight: bolder;
   color: var(--text-color);
 }
 
@@ -285,7 +283,7 @@ body.dark-mode {
   font-size: 1rem;
 }
 
-/*chat delete*/
+/*chat delete & API Key add*/
 .confirm-modal-overlay {
   position: fixed;
   top: 0;
@@ -543,6 +541,7 @@ body.dark-mode {
 }
 
 /* Button Styles */
+.api-key-btn,
 .file-label,
 .search-toggle,
 .mic-btn,
@@ -616,8 +615,19 @@ body.dark-mode {
 
 .dark-mode-btn {
   padding: 6px 8px;
-  font-size: 1rem;
+  font-size: 0.9rem;
   transition: color 0.15s ease;
+}
+
+.api-key-btn {
+  margin-left: 14px;
+  padding: 6px 8px;
+  font-size: 0.9rem;
+  transition: color 0.15s ease;
+}
+
+.api-key-btn:hover {
+  color: #a0a0a0;
 }
 
 .dark-mode-btn:hover {
@@ -626,7 +636,6 @@ body.dark-mode {
 
 .logout-btn {
   padding: 6px 8px;
-  border-radius: 13px;
   font-size: 0.9rem;
   transition: background-color 0.15s ease;
 }
