@@ -96,6 +96,7 @@ body.dark-mode {
   font-size: 0.9rem;
   display: inline-flex;
   align-items: center;
+  padding: 6px 8px;
 }
 
 /* Sidebar */
@@ -291,7 +292,6 @@ body.dark-mode {
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.4);
-  /* Dim overlay */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -299,7 +299,7 @@ body.dark-mode {
 }
 
 .confirm-modal {
-  background: #fff;
+  background: var(--bg-color);
   border-radius: 13px;
   padding: 20px;
   width: 300px;
@@ -311,12 +311,12 @@ body.dark-mode {
 .confirm-modal h3 {
   margin-top: 0;
   font-size: 1.2rem;
-  color: #202123;
+  color: var(--text-color);
 }
 
 .confirm-modal p {
   font-size: 1rem;
-  color: #333;
+  color: var(--text-color);
   margin: 20px 0;
 }
 
@@ -332,12 +332,12 @@ body.dark-mode {
 
 .confirm-modal button.confirm-btn {
   background-color: #e74c3c;
-  color: #fff;
+  color: var(--text-color);
 }
 
 .confirm-modal button.cancel-btn {
   background-color: #bdc3c7;
-  color: #333;
+  color: var(--text-color);
 }
 
 .confirm-modal button:hover {
@@ -359,6 +359,27 @@ body.dark-mode {
   overflow: hidden;
 }
 
+/* The welcome box */
+.welcome-message {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -180%);
+  text-align: center; 
+  color: var(--text-color);            
+  font-size: 1.5rem;  
+  font-weight: 800;      
+  line-height: 1.5;
+}
+
+/* The “bubble” around the text */
+.welcome-message p {
+  display: inline-block;
+  color: var(--text-color);             
+  border-radius: 0.75rem;   
+  max-width: 600px;
+}
+
 .messages-container {
   position: absolute;
   top: 0;
@@ -367,7 +388,7 @@ body.dark-mode {
   right: 0;
   overflow-y: auto;
   scrollbar-color: var(--scroll-bar-color) var(--bg-color);
-  padding: 20px;
+  padding: 10px;
   box-sizing: border-box;
 }
 
@@ -379,12 +400,12 @@ body.dark-mode {
 
 .message-row.user {
   justify-content: flex-end;
-  margin-right: 24%;
+  margin-right: 26%;
 }
 
 .message-row.bot {
   justify-content: flex-start;
-  margin-left: 24%;
+  margin-left: 26%;
 }
 
 .message-text {
@@ -404,7 +425,7 @@ body.dark-mode {
 
 .message-row.bot .message-text {
   background-color: var(--bot-message-bg);
-  max-width: 67%;
+  max-width: 64%;
 }
 
 /* Message Attachments */
@@ -428,7 +449,7 @@ body.dark-mode {
   position: absolute;
   left: 50%;
   width: 100%;
-  max-width: 800px;
+  max-width: 750px;
   background-color: var(--top-nav-bg);
   border: 1px solid var(--top-nav-border);
   border-radius: 35px;
@@ -620,7 +641,6 @@ body.dark-mode {
 }
 
 .api-key-btn {
-  margin-left: 14px;
   padding: 6px 8px;
   font-size: 0.9rem;
   transition: color 0.15s ease;
@@ -799,4 +819,39 @@ body.dark-mode {
 .speaker-icon.active {
   color: #0055af;
 
+}
+
+.temporary-popup {
+  position: absolute;
+  top: 3%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;   
+  /* top-right corner is typical for “toast” messages */
+  background-color: #af4e4e;
+  color: #fff;
+  padding: 6px 8px;
+  border-radius: 15px;
+  font-size: 0.8rem;
+  z-index: 9999;
+  opacity: 0;
+  animation: fadeInOut 2s forwards;
+}
+
+@keyframes fadeInOut {
+  0% {
+    opacity: 0;
+  }
+
+  10% {
+    opacity: 1;
+  }
+
+  90% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
 }

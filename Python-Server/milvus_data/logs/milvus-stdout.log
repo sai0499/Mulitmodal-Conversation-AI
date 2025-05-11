@@ -1,0 +1,8 @@
+[2025/04/28 22:52:04.405 +02:00] [INFO] [paramtable/quota_param.go:787] ["init disk quota"] [diskQuota(MB)=+inf]
+[2025/04/28 22:52:04.405 +02:00] [INFO] [paramtable/quota_param.go:802] ["init disk quota per DB"] [diskQuotaPerCollection(MB)=1.7976931348623157e+308]
+[2025/04/28 22:52:04.405 +02:00] [INFO] [paramtable/component_param.go:1578] ["init segment max idle time"] [value=10m0s]
+[2025/04/28 22:52:04.405 +02:00] [INFO] [paramtable/component_param.go:1583] ["init segment min size from idle to sealed"] [value=16]
+[2025/04/28 22:52:04.405 +02:00] [INFO] [paramtable/component_param.go:1593] ["init segment max binlog file to sealed"] [value=32]
+[2025/04/28 22:52:04.405 +02:00] [INFO] [paramtable/component_param.go:1588] ["init segment expansion rate"] [value=1.25]
+[2025/04/28 22:52:04.406 +02:00] [INFO] [paramtable/base_table.go:145] ["cannot find etcd.endpoints"]
+[2025/04/28 22:52:04.406 +02:00] [INFO] [paramtable/hook_config.go:19] ["hook config"] [hook={}]

@@ -10,14 +10,13 @@
   
   .auth-form-header {
     text-align: center;
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
   }
 
   .logo-title {
     display: flex;
     align-items: center;
     padding: 1px 130px;
-    margin-bottom: 10px;
   }
   
   .logo {

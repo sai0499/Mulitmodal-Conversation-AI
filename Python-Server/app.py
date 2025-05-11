@@ -2,34 +2,61 @@ import os
 import json
 import logging
 import tempfile
+import atexit
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from dotenv import load_dotenv
+from milvus import default_server
+from pymilvus import connections
 from decryption_util import decrypt_api_key
 from serpAPI import get_answer_box_and_top_organic_results
 from gemini_api import query_gemini_api
+from retriever import retrieve
 from FineTunedIntentClassifierModel import load_model as load_intent_model, classify_intent
 from stt_transcriber import transcribe_audio
 from whisper_model import model as whisper_model
-import markdown2
 
-# Load environment variables.
+# Load environment variables
 dotenv_path = os.path.join(os.path.dirname(__file__), ".env")
 load_dotenv(dotenv_path)
 
-# Set up logging.
+# Set up logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Initialize Flask app.
+# Start Milvus-Lite server at application startup
+default_server.set_base_dir("./milvus_data")
+default_server.start()
+milvus_port = default_server.listen_port
+logger.info("Milvus-Lite running at http://127.0.0.1:%d", milvus_port)
+# Establish Milvus connection
+connections.connect(alias="default", host="127.0.0.1", port=milvus_port)
+
+# Register shutdown hook to stop Milvus when application exits
+
+def shutdown_milvus():
+    try:
+        connections.disconnect("default")
+        logger.info("Disconnected Milvus-Lite connection")
+    except Exception as e:
+        logger.warning("Error disconnecting Milvus: %s", e)
+    try:
+        default_server.stop()
+        logger.info("Milvus-Lite stopped")
+    except Exception as e:
+        logger.warning("Error stopping Milvus-Lite: %s", e)
+
+atexit.register(shutdown_milvus)
+
+# Initialize Flask app
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
 app.config['UPLOAD_FOLDER'] = tempfile.gettempdir()
 
-# Global flag for search mode.
+# Global flag for search mode
 GLOBAL_SEARCH_MODE = False
 
-# Load the intent classifier model once at startup.
+# Load the intent classifier model once at startup
 try:
     classifier_model, classifier_tokenizer = load_intent_model("./intent_model_lora")
     logger.info("Intent classifier model loaded successfully.")
@@ -46,7 +73,6 @@ def set_search_mode():
     GLOBAL_SEARCH_MODE = bool(data['searchMode'])
     logger.info("Global search mode set to %s", GLOBAL_SEARCH_MODE)
     return jsonify({"search_mode": GLOBAL_SEARCH_MODE}), 200
-
 
 @app.route('/api/gemini', methods=['POST'])
 def gemini_endpoint():
@@ -69,77 +95,70 @@ def gemini_endpoint():
                 logger.error("Error decrypting API key: %s", e)
                 return jsonify({"error": "Failed to decrypt API key."}), 500
         else:
-            # Log a warning and decide on a fallback behavior
             logger.warning("No API key provided; continuing without API key.")
 
+        # Determine intent
         if GLOBAL_SEARCH_MODE:
-            # Only call SERP API if we have a valid API key; otherwise, skip it.
-            if decrypted_api_key:
-                try:
-                    serp_data = get_answer_box_and_top_organic_results(query, decrypted_api_key)
-                except Exception as e:
-                    logger.warning("SERP API call failed: %s", e)
-                    serp_data = None
-
-                if serp_data:
-                    serp_context = json.dumps(serp_data)
-                    full_prompt = (
-                        f"Role: You are a AI Assistant that helps students in any University related questions.\n\n"
-                        f"User Query: {query}\n\n"
-                        f"Web Search Results: {serp_context}\n\n"
-                        "Based on the above, generate a helpful and concise response with relevant web links. "
-                        "Say that you do not the answer if the context does not provide any relevant information related to the query."
-                        "Avoid the context for any general questions like greetings or 'who are you?' questions or goodbyes and answer in a general way. "
-                    )
-                else:
-                    full_prompt = query
-            else:
-                full_prompt = query  # Fallback if no API key is available for search.
             intent = "web search"
         else:
-            # Use intent classifier if available.
             if classifier_model is None or classifier_tokenizer is None:
                 return jsonify({"error": "Intent classifier is not available."}), 500
+            label = classify_intent(classifier_model, classifier_tokenizer, query)
+            intent = "web search" if label == 1 else "RAG Search"
+        logger.info("Query classified as: %s", intent)
 
-            predicted_label = classify_intent(classifier_model, classifier_tokenizer, query)
-            intent = "web search" if predicted_label == 1 else "RAG Search"
-            logger.info("Query classified as: %s", intent)
-            if intent == "web search" and decrypted_api_key:
-                try:
-                    serp_data = get_answer_box_and_top_organic_results(query, decrypted_api_key)
-                except Exception as e:
-                    logger.warning("SERP API call failed: %s", e)
-                    serp_data = None
+        # Build prompt
+        if intent == "web search" and decrypted_api_key:
+            try:
+                serp_data = get_answer_box_and_top_organic_results(query, decrypted_api_key)
+            except Exception as e:
+                logger.warning("SERP API call failed: %s", e)
+                serp_data = None
 
-                if serp_data:
-                    serp_context = json.dumps(serp_data)
-                    full_prompt = (
-                    f"Role: You are a AI Assistant name Lucy in Uni-Ask who helps students in any University related questions.\n\n"
+            if serp_data:
+                serp_context = json.dumps(serp_data)
+                full_prompt = (
+                    "Role: You are an AI Assistant named Lucy in Uni-Ask who helps students with any university-related questions.\n\n"
                     f"User Query: {query}\n\n"
                     f"Web Search Results: {serp_context}\n\n"
-                    "Based on the above, generate a helpful and concise response with relevant web links."
-                    "Say that you do not the answer if the context does not provide any relevant information related to the query."
-                    "Avoid the context for any general questions like greetings or 'who are you?' questions or goodbyes and answer in a general way. "
-
-                    )
-                else:
-                    full_prompt = query
+                    "Based on the above, generate a helpful and concise response with relevant web links. "
+                    "If the context doesn’t provide relevant information, say you don’t know. "
+                    "Ignore the context for general chit-chat or greetings."
+                )
             else:
+                full_prompt = query
+
+        elif intent == "RAG Search":
+            try:
+                chunks = retrieve(query, top_k=20)
+                context_lines = [
+                    f"Source: {c['source_path']} (chunk {c['chunk_id']}): {c['chunk_text']}"
+                    for c in chunks
+                ]
+                rag_context = "\n".join(context_lines)
+                print(rag_context)
+
                 full_prompt = (
-                    "Role: You are a AI Assistant that helps students in any University related questions.\n\n "
+                    "Role: You are an AI Assistant named Lucy in Uni-Ask who helps students with any university-related questions.\n\n"
                     f"User Query: {query}\n\n"
-                    "Say that you do not the answer if the context does not provide any relevant information related to the query. "
-                    "Avoid the context for any general questions like greetings or 'who are you?' questions or goodbyes and answer in a general way. "
+                    f"Retrieved Context:\n{rag_context}\n\n"
                     "Based on the above, generate a helpful and concise response. "
-                    )
+                    "If the context doesn’t have relevant information, say you don’t know. "
+                    "Ignore the context for general chit-chat or greetings."
+                )
+            except Exception as e:
+                logger.error("RAG retrieval failed: %s", e)
+                full_prompt = query
+        else:
+            full_prompt = query
 
     try:
         response_text = query_gemini_api(full_prompt)
-        #formatted_reply = markdown2.markdown(response_text)
-        response_payload = {"reply": response_text}
+        payload = {"reply": response_text}
         if not skip_validation:
-            response_payload["intent"] = intent
-        return jsonify(response_payload), 200
+            payload["intent"] = intent
+        return jsonify(payload), 200
+
     except Exception as e:
         logger.error("Error processing query: %s", e)
         return jsonify({"error": str(e)}), 500

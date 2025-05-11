@@ -57,6 +57,9 @@ export default function ConversationPage() {
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [chatToDelete, setChatToDelete] = useState(null);
 
+  const [tempPopupMessage, setTempPopupMessage] = useState('');
+  const [showTempPopup, setShowTempPopup] = useState(false);
+
   // Refs for audio recording, messages, etc.
   const mediaRecorderRef = useRef(null);
   const audioChunksRef = useRef([]);
@@ -330,10 +333,24 @@ export default function ConversationPage() {
     });
   };
 
+  /**
+* Shows a popup message that disappears after 2 seconds.
+*/
+  const showTemporaryPopup = (message) => {
+    setTempPopupMessage(message);
+    setShowTempPopup(true);
+
+    setTimeout(() => {
+      setShowTempPopup(false);
+      setTempPopupMessage('');
+    }, 2000); // 2 seconds
+  };
+
+
   // Toggle web search mode.
   const toggleSearch = async () => {
     if (!userApiKey) {
-      alert('No API key is added for online search.');
+      showTemporaryPopup('⚠️ No API key is added for online search.');
       return;
     }
     const newValue = !searchMode;
@@ -412,6 +429,7 @@ export default function ConversationPage() {
         ...prev,
       ]);
     }
+
 
     // Insert placeholder bot message.
     const placeholder = { sender: 'bot', text: 'generating response...', loading: true };
@@ -773,8 +791,20 @@ export default function ConversationPage() {
           </div>
         </div>
 
+        {showTempPopup && (
+          <div className="temporary-popup">
+            {tempPopupMessage}
+          </div>
+        )}
+
         {/* Chat Area */}
         <div className="chat-area">
+          {/* Welcome message for a new chat */}
+          {messages.length === 0 && (
+            <div className="welcome-message">
+              <p>Welcome to Uni-Ask! How can I assist you today?</p>
+            </div>
+          )}
           {messages.length > 0 && (
             <div className="messages-container" ref={messagesContainerRef}>
               {messages.map((msg, idx) => (
@@ -938,7 +968,7 @@ export default function ConversationPage() {
                     setErrorMessage('');
                   }}
                   placeholder="Enter your SerpAPI Key"
-                  style={{ width: '90%', padding: '8px', marginBottom: '20px' }}
+                  style={{ width: '90%', padding: '8px', marginBottom: '20px', borderRadius: '10px', border: '1px solid gray' }}
                 />
                 {errorMessage && (
                   <p className="error-message" style={{ color: 'red', marginBottom: '10px' }}>

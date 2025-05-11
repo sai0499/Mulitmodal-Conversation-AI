@@ -1,0 +1,23 @@
+2025/04/28 22:52:04 maxprocs: Leaving GOMAXPROCS=16: CPU quota undefined
+
+    __  _________ _   ____  ______    
+   /  |/  /  _/ /| | / / / / / __/    
+  / /|_/ // // /_| |/ / /_/ /\ \    
+ /_/  /_/___/____/___/\____/___/     
+
+Welcome to use Milvus!
+Version:   v2.2.16-lite
+Built:     Sun, Dec  3, 2023 11:20:00 AM
+GitCommit: af56b2843
+GoVersion: go version go1.18 windows/amd64
+
+open pid file: run/standalone.pid
+panic: file standalone.pid write fail, error = write run/standalone.pid: The process cannot access the file because another process has locked a portion of the file.
+
+goroutine 1 [running]:
+github.com/milvus-io/milvus/cmd/milvus.(*run).execute(0x22ab893ffff?, {0xc000156000?, 0x3, 0x4}, 0xc000400240)
+	D:/a/milvus-lite/milvus-lite/milvus_binary/milvus/cmd/milvus/run.go:49 +0x329
+github.com/milvus-io/milvus/cmd/milvus.RunMilvus({0xc000156000?, 0x3, 0x4})
+	D:/a/milvus-lite/milvus-lite/milvus_binary/milvus/cmd/milvus/milvus.go:60 +0x20e
+main.main()
+	D:/a/milvus-lite/milvus-lite/milvus_binary/milvus/cmd/main.go:95 +0x378
