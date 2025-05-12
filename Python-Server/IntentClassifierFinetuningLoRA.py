@@ -4,8 +4,7 @@ import torch
 import numpy as np
 import pandas as pd
 
-from transformers import (RobertaTokenizer, RobertaForSequenceClassification,
-                          Trainer, TrainingArguments, set_seed)
+from transformers import (RobertaTokenizer, RobertaForSequenceClassification, Trainer, TrainingArguments, set_seed)
 from datasets import Dataset
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
@@ -63,7 +62,7 @@ def main():
     # Paths and hyperparameters
     dataset_path = "D:/Human Centered NLP/conversation-ai/SyntheticDatasetforIntentClassifier/Intent_Classifier_Dataset - Processed.csv"
     output_dir = "./intent_model_lora"
-    num_epochs = 5
+    num_epochs = 3
     train_batch_size = 8
     eval_batch_size = 8
     learning_rate = 2e-5

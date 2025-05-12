@@ -75,3 +75,194 @@
 2025-04-28 18:14:17,418 DEBUG [default] [SEGCORE][SegcoreSetSimdType][] set config simd_type: auto
 2025-04-28 18:14:17,418 INFO [default] [KNOWHERE][SetSimdType][] FAISS expect simdType::AUTO
 2025-04-28 18:14:17,418 INFO [default] [KNOWHERE][SetSimdType][] FAISS hook REF
+2025-05-11 23:50:38,494 INFO [default] [KNOWHERE][SetBlasThreshold][] Set faiss::distance_compute_blas_threshold to 16384
+2025-05-11 23:50:38,495 INFO [default] [KNOWHERE][SetEarlyStopThreshold][] Set faiss::early_stop_threshold to 0
+2025-05-11 23:50:38,495 INFO [default] [KNOWHERE][SetStatisticsLevel][] Set knowhere::STATISTICS_LEVEL to 0
+2025-05-11 23:50:38,495 INFO [default] [KNOWHERE][SetBlasThreshold][] Set faiss::distance_compute_blas_threshold to 16384
+2025-05-11 23:50:38,495 INFO [default] [KNOWHERE][SetEarlyStopThreshold][] Set faiss::early_stop_threshold to 0
+2025-05-11 23:50:38,495 INFO [default] [KNOWHERE][SetStatisticsLevel][] Set knowhere::STATISTICS_LEVEL to 0
+2025-05-11 23:50:38,495 DEBUG [default] [SERVER][operator()][] Config easylogging with yaml file: D:\Human Centered NLP\conversation-ai\Python-Server\milvus_data/configs/easylogging.yaml
+2025-05-11 23:50:38,495 DEBUG [default] [SERVER][operator()][] Config easylogging with yaml file: D:\Human Centered NLP\conversation-ai\Python-Server\milvus_data/configs/easylogging.yaml
+2025-05-11 23:50:38,495 INFO [default] [KNOWHERE][SetSimdType][] FAISS expect simdType::AUTO
+2025-05-11 23:50:38,496 INFO [default] [KNOWHERE][SetSimdType][] FAISS hook REF
+2025-05-11 23:50:38,496 DEBUG [default] [SEGCORE][SetIndexSliceSize][] set config index slice size(byte): 16777216
+2025-05-11 23:50:38,496 DEBUG [default] [SEGCORE][SetThreadCoreCoefficient][] set thread pool core coefficient: 10
+2025-05-11 23:50:38,497 DEBUG [default] [SEGCORE][SegcoreSetSimdType][] set config simd_type: auto
+2025-05-11 23:50:38,497 INFO [default] [KNOWHERE][SetSimdType][] FAISS expect simdType::AUTO
+2025-05-11 23:50:38,497 INFO [default] [KNOWHERE][SetSimdType][] FAISS hook REF
+2025-05-11 23:55:56,525 INFO [default] [KNOWHERE][SetBlasThreshold][] Set faiss::distance_compute_blas_threshold to 16384
+2025-05-11 23:55:56,526 INFO [default] [KNOWHERE][SetEarlyStopThreshold][] Set faiss::early_stop_threshold to 0
+2025-05-11 23:55:56,526 INFO [default] [KNOWHERE][SetStatisticsLevel][] Set knowhere::STATISTICS_LEVEL to 0
+2025-05-11 23:55:56,526 INFO [default] [KNOWHERE][SetBlasThreshold][] Set faiss::distance_compute_blas_threshold to 16384
+2025-05-11 23:55:56,526 INFO [default] [KNOWHERE][SetEarlyStopThreshold][] Set faiss::early_stop_threshold to 0
+2025-05-11 23:55:56,526 INFO [default] [KNOWHERE][SetStatisticsLevel][] Set knowhere::STATISTICS_LEVEL to 0
+2025-05-11 23:55:56,526 DEBUG [default] [SERVER][operator()][] Config easylogging with yaml file: D:\Human Centered NLP\conversation-ai\Python-Server\milvus_data/configs/easylogging.yaml
+2025-05-11 23:55:56,526 DEBUG [default] [SERVER][operator()][] Config easylogging with yaml file: D:\Human Centered NLP\conversation-ai\Python-Server\milvus_data/configs/easylogging.yaml
+2025-05-11 23:55:56,526 INFO [default] [KNOWHERE][SetSimdType][] FAISS expect simdType::AUTO
+2025-05-11 23:55:56,527 INFO [default] [KNOWHERE][SetSimdType][] FAISS hook REF
+2025-05-11 23:55:56,527 DEBUG [default] [SEGCORE][SetIndexSliceSize][] set config index slice size(byte): 16777216
+2025-05-11 23:55:56,527 DEBUG [default] [SEGCORE][SetThreadCoreCoefficient][] set thread pool core coefficient: 10
+2025-05-11 23:55:56,528 DEBUG [default] [SEGCORE][SegcoreSetSimdType][] set config simd_type: auto
+2025-05-11 23:55:56,528 INFO [default] [KNOWHERE][SetSimdType][] FAISS expect simdType::AUTO
+2025-05-11 23:55:56,528 INFO [default] [KNOWHERE][SetSimdType][] FAISS hook REF
+2025-05-11 23:56:30,569 INFO [default] [SEGCORE][N6milvus10ThreadPoolE::ThreadPool][] Thread pool's worker num:160
+2025-05-11 23:57:28,617 INFO [default] [KNOWHERE][SetBlasThreshold][] Set faiss::distance_compute_blas_threshold to 16384
+2025-05-11 23:57:28,617 INFO [default] [KNOWHERE][SetEarlyStopThreshold][] Set faiss::early_stop_threshold to 0
+2025-05-11 23:57:28,617 INFO [default] [KNOWHERE][SetStatisticsLevel][] Set knowhere::STATISTICS_LEVEL to 0
+2025-05-11 23:57:28,617 INFO [default] [KNOWHERE][SetBlasThreshold][] Set faiss::distance_compute_blas_threshold to 16384
+2025-05-11 23:57:28,617 INFO [default] [KNOWHERE][SetEarlyStopThreshold][] Set faiss::early_stop_threshold to 0
+2025-05-11 23:57:28,618 DEBUG [default] [SERVER][operator()][] Config easylogging with yaml file: D:\Human Centered NLP\conversation-ai\Python-Server\milvus_data/configs/easylogging.yaml
+2025-05-11 23:57:28,618 INFO [default] [KNOWHERE][SetStatisticsLevel][] Set knowhere::STATISTICS_LEVEL to 0
+2025-05-11 23:57:28,618 INFO [default] [KNOWHERE][SetSimdType][] FAISS expect simdType::AUTO
+2025-05-11 23:57:28,618 INFO [default] [KNOWHERE][SetSimdType][] FAISS hook REF
+2025-05-11 23:57:28,618 DEBUG [default] [SERVER][operator()][] Config easylogging with yaml file: D:\Human Centered NLP\conversation-ai\Python-Server\milvus_data/configs/easylogging.yaml
+2025-05-11 23:57:28,618 DEBUG [default] [SEGCORE][SetIndexSliceSize][] set config index slice size(byte): 16777216
+2025-05-11 23:57:28,618 DEBUG [default] [SEGCORE][SetThreadCoreCoefficient][] set thread pool core coefficient: 10
+2025-05-11 23:57:28,619 DEBUG [default] [SEGCORE][SegcoreSetSimdType][] set config simd_type: auto
+2025-05-11 23:57:28,619 INFO [default] [KNOWHERE][SetSimdType][] FAISS expect simdType::AUTO
+2025-05-11 23:57:28,619 INFO [default] [KNOWHERE][SetSimdType][] FAISS hook REF
+2025-05-11 23:57:51,197 INFO [default] [SEGCORE][N6milvus10ThreadPoolE::ThreadPool][] Thread pool's worker num:160
+2025-05-12 00:09:46,732 INFO [default] [KNOWHERE][SetBlasThreshold][] Set faiss::distance_compute_blas_threshold to 16384
+2025-05-12 00:09:46,732 INFO [default] [KNOWHERE][SetEarlyStopThreshold][] Set faiss::early_stop_threshold to 0
+2025-05-12 00:09:46,732 INFO [default] [KNOWHERE][SetStatisticsLevel][] Set knowhere::STATISTICS_LEVEL to 0
+2025-05-12 00:09:46,733 DEBUG [default] [SERVER][operator()][] Config easylogging with yaml file: D:\Human Centered NLP\conversation-ai\Python-Server\milvus_data/configs/easylogging.yaml
+2025-05-12 00:09:46,733 INFO [default] [KNOWHERE][SetBlasThreshold][] Set faiss::distance_compute_blas_threshold to 16384
+2025-05-12 00:09:46,733 INFO [default] [KNOWHERE][SetEarlyStopThreshold][] Set faiss::early_stop_threshold to 0
+2025-05-12 00:09:46,733 INFO [default] [KNOWHERE][SetStatisticsLevel][] Set knowhere::STATISTICS_LEVEL to 0
+2025-05-12 00:09:46,733 INFO [default] [KNOWHERE][SetSimdType][] FAISS expect simdType::AUTO
+2025-05-12 00:09:46,733 INFO [default] [KNOWHERE][SetSimdType][] FAISS hook REF
+2025-05-12 00:09:46,733 DEBUG [default] [SERVER][operator()][] Config easylogging with yaml file: D:\Human Centered NLP\conversation-ai\Python-Server\milvus_data/configs/easylogging.yaml
+2025-05-12 00:09:46,733 DEBUG [default] [SEGCORE][SetIndexSliceSize][] set config index slice size(byte): 16777216
+2025-05-12 00:09:46,733 DEBUG [default] [SEGCORE][SetThreadCoreCoefficient][] set thread pool core coefficient: 10
+2025-05-12 00:09:46,734 DEBUG [default] [SEGCORE][SegcoreSetSimdType][] set config simd_type: auto
+2025-05-12 00:09:46,734 INFO [default] [KNOWHERE][SetSimdType][] FAISS expect simdType::AUTO
+2025-05-12 00:09:46,734 INFO [default] [KNOWHERE][SetSimdType][] FAISS hook REF
+2025-05-12 00:10:10,301 INFO [default] [SEGCORE][N6milvus10ThreadPoolE::ThreadPool][] Thread pool's worker num:160
+2025-05-12 00:17:28,195 INFO [default] [KNOWHERE][SetBlasThreshold][] Set faiss::distance_compute_blas_threshold to 16384
+2025-05-12 00:17:28,195 INFO [default] [KNOWHERE][SetEarlyStopThreshold][] Set faiss::early_stop_threshold to 0
+2025-05-12 00:17:28,195 INFO [default] [KNOWHERE][SetStatisticsLevel][] Set knowhere::STATISTICS_LEVEL to 0
+2025-05-12 00:17:28,195 INFO [default] [KNOWHERE][SetBlasThreshold][] Set faiss::distance_compute_blas_threshold to 16384
+2025-05-12 00:17:28,195 INFO [default] [KNOWHERE][SetEarlyStopThreshold][] Set faiss::early_stop_threshold to 0
+2025-05-12 00:17:28,195 INFO [default] [KNOWHERE][SetStatisticsLevel][] Set knowhere::STATISTICS_LEVEL to 0
+2025-05-12 00:17:28,196 DEBUG [default] [SERVER][operator()][] Config easylogging with yaml file: D:\Human Centered NLP\conversation-ai\Python-Server\milvus_data/configs/easylogging.yaml
+2025-05-12 00:17:28,196 DEBUG [default] [SERVER][operator()][] Config easylogging with yaml file: D:\Human Centered NLP\conversation-ai\Python-Server\milvus_data/configs/easylogging.yaml
+2025-05-12 00:17:28,196 INFO [default] [KNOWHERE][SetSimdType][] FAISS expect simdType::AUTO
+2025-05-12 00:17:28,196 INFO [default] [KNOWHERE][SetSimdType][] FAISS hook REF
+2025-05-12 00:17:28,196 DEBUG [default] [SEGCORE][SetIndexSliceSize][] set config index slice size(byte): 16777216
+2025-05-12 00:17:28,196 DEBUG [default] [SEGCORE][SetThreadCoreCoefficient][] set thread pool core coefficient: 10
+2025-05-12 00:17:28,196 DEBUG [default] [SEGCORE][SegcoreSetSimdType][] set config simd_type: auto
+2025-05-12 00:17:28,196 INFO [default] [KNOWHERE][SetSimdType][] FAISS expect simdType::AUTO
+2025-05-12 00:17:28,196 INFO [default] [KNOWHERE][SetSimdType][] FAISS hook REF
+2025-05-12 00:17:51,782 INFO [default] [SEGCORE][N6milvus10ThreadPoolE::ThreadPool][] Thread pool's worker num:160
+2025-05-12 00:30:35,718 INFO [default] [KNOWHERE][SetBlasThreshold][] Set faiss::distance_compute_blas_threshold to 16384
+2025-05-12 00:30:35,718 INFO [default] [KNOWHERE][SetEarlyStopThreshold][] Set faiss::early_stop_threshold to 0
+2025-05-12 00:30:35,718 INFO [default] [KNOWHERE][SetStatisticsLevel][] Set knowhere::STATISTICS_LEVEL to 0
+2025-05-12 00:30:35,718 INFO [default] [KNOWHERE][SetBlasThreshold][] Set faiss::distance_compute_blas_threshold to 16384
+2025-05-12 00:30:35,718 INFO [default] [KNOWHERE][SetEarlyStopThreshold][] Set faiss::early_stop_threshold to 0
+2025-05-12 00:30:35,718 INFO [default] [KNOWHERE][SetStatisticsLevel][] Set knowhere::STATISTICS_LEVEL to 0
+2025-05-12 00:30:35,719 DEBUG [default] [SERVER][operator()][] Config easylogging with yaml file: D:\Human Centered NLP\conversation-ai\Python-Server\milvus_data/configs/easylogging.yaml
+2025-05-12 00:30:35,719 DEBUG [default] [SERVER][operator()][] Config easylogging with yaml file: D:\Human Centered NLP\conversation-ai\Python-Server\milvus_data/configs/easylogging.yaml
+2025-05-12 00:30:35,719 INFO [default] [KNOWHERE][SetSimdType][] FAISS expect simdType::AUTO
+2025-05-12 00:30:35,719 INFO [default] [KNOWHERE][SetSimdType][] FAISS hook REF
+2025-05-12 00:30:35,719 DEBUG [default] [SEGCORE][SetIndexSliceSize][] set config index slice size(byte): 16777216
+2025-05-12 00:30:35,720 DEBUG [default] [SEGCORE][SetThreadCoreCoefficient][] set thread pool core coefficient: 10
+2025-05-12 00:30:35,720 DEBUG [default] [SEGCORE][SegcoreSetSimdType][] set config simd_type: auto
+2025-05-12 00:30:35,720 INFO [default] [KNOWHERE][SetSimdType][] FAISS expect simdType::AUTO
+2025-05-12 00:30:35,720 INFO [default] [KNOWHERE][SetSimdType][] FAISS hook REF
+2025-05-12 00:30:58,300 INFO [default] [SEGCORE][N6milvus10ThreadPoolE::ThreadPool][] Thread pool's worker num:160
+2025-05-12 00:45:49,704 INFO [default] [KNOWHERE][SetBlasThreshold][] Set faiss::distance_compute_blas_threshold to 16384
+2025-05-12 00:45:49,704 INFO [default] [KNOWHERE][SetEarlyStopThreshold][] Set faiss::early_stop_threshold to 0
+2025-05-12 00:45:49,704 INFO [default] [KNOWHERE][SetStatisticsLevel][] Set knowhere::STATISTICS_LEVEL to 0
+2025-05-12 00:45:49,705 DEBUG [default] [SERVER][operator()][] Config easylogging with yaml file: D:\Human Centered NLP\conversation-ai\Python-Server\milvus_data/configs/easylogging.yaml
+2025-05-12 00:45:49,705 INFO [default] [KNOWHERE][SetBlasThreshold][] Set faiss::distance_compute_blas_threshold to 16384
+2025-05-12 00:45:49,705 INFO [default] [KNOWHERE][SetEarlyStopThreshold][] Set faiss::early_stop_threshold to 0
+2025-05-12 00:45:49,705 INFO [default] [KNOWHERE][SetStatisticsLevel][] Set knowhere::STATISTICS_LEVEL to 0
+2025-05-12 00:45:49,705 DEBUG [default] [SERVER][operator()][] Config easylogging with yaml file: D:\Human Centered NLP\conversation-ai\Python-Server\milvus_data/configs/easylogging.yaml
+2025-05-12 00:45:49,705 INFO [default] [KNOWHERE][SetSimdType][] FAISS expect simdType::AUTO
+2025-05-12 00:45:49,705 INFO [default] [KNOWHERE][SetSimdType][] FAISS hook REF
+2025-05-12 00:45:49,705 DEBUG [default] [SEGCORE][SetIndexSliceSize][] set config index slice size(byte): 16777216
+2025-05-12 00:45:49,705 DEBUG [default] [SEGCORE][SetThreadCoreCoefficient][] set thread pool core coefficient: 10
+2025-05-12 00:45:49,705 DEBUG [default] [SEGCORE][SegcoreSetSimdType][] set config simd_type: auto
+2025-05-12 00:45:49,705 INFO [default] [KNOWHERE][SetSimdType][] FAISS expect simdType::AUTO
+2025-05-12 00:45:49,705 INFO [default] [KNOWHERE][SetSimdType][] FAISS hook REF
+2025-05-12 00:46:12,267 INFO [default] [SEGCORE][N6milvus10ThreadPoolE::ThreadPool][] Thread pool's worker num:160
+2025-05-12 01:37:37,527 INFO [default] [KNOWHERE][SetBlasThreshold][] Set faiss::distance_compute_blas_threshold to 16384
+2025-05-12 01:37:37,528 INFO [default] [KNOWHERE][SetEarlyStopThreshold][] Set faiss::early_stop_threshold to 0
+2025-05-12 01:37:37,528 INFO [default] [KNOWHERE][SetStatisticsLevel][] Set knowhere::STATISTICS_LEVEL to 0
+2025-05-12 01:37:37,528 INFO [default] [KNOWHERE][SetBlasThreshold][] Set faiss::distance_compute_blas_threshold to 16384
+2025-05-12 01:37:37,528 INFO [default] [KNOWHERE][SetEarlyStopThreshold][] Set faiss::early_stop_threshold to 0
+2025-05-12 01:37:37,528 INFO [default] [KNOWHERE][SetStatisticsLevel][] Set knowhere::STATISTICS_LEVEL to 0
+2025-05-12 01:37:37,529 DEBUG [default] [SERVER][operator()][] Config easylogging with yaml file: D:\Human Centered NLP\conversation-ai\Python-Server\milvus_data/configs/easylogging.yaml
+2025-05-12 01:37:37,529 DEBUG [default] [SERVER][operator()][] Config easylogging with yaml file: D:\Human Centered NLP\conversation-ai\Python-Server\milvus_data/configs/easylogging.yaml
+2025-05-12 01:37:37,529 INFO [default] [KNOWHERE][SetSimdType][] FAISS expect simdType::AUTO
+2025-05-12 01:37:37,529 INFO [default] [KNOWHERE][SetSimdType][] FAISS hook REF
+2025-05-12 01:37:37,529 DEBUG [default] [SEGCORE][SetIndexSliceSize][] set config index slice size(byte): 16777216
+2025-05-12 01:37:37,529 DEBUG [default] [SEGCORE][SetThreadCoreCoefficient][] set thread pool core coefficient: 10
+2025-05-12 01:37:37,529 DEBUG [default] [SEGCORE][SegcoreSetSimdType][] set config simd_type: auto
+2025-05-12 01:37:37,529 INFO [default] [KNOWHERE][SetSimdType][] FAISS expect simdType::AUTO
+2025-05-12 01:37:37,529 INFO [default] [KNOWHERE][SetSimdType][] FAISS hook REF
+2025-05-12 01:37:43,089 INFO [default] [SEGCORE][N6milvus10ThreadPoolE::ThreadPool][] Thread pool's worker num:160
+2025-05-12 02:38:08,218 INFO [default] [KNOWHERE][SetBlasThreshold][] Set faiss::distance_compute_blas_threshold to 16384
+2025-05-12 02:38:08,219 INFO [default] [KNOWHERE][SetEarlyStopThreshold][] Set faiss::early_stop_threshold to 0
+2025-05-12 02:38:08,219 INFO [default] [KNOWHERE][SetStatisticsLevel][] Set knowhere::STATISTICS_LEVEL to 0
+2025-05-12 02:38:08,219 DEBUG [default] [SERVER][operator()][] Config easylogging with yaml file: D:\Human Centered NLP\conversation-ai\Python-Server\milvus_data/configs/easylogging.yaml
+2025-05-12 02:38:08,219 INFO [default] [KNOWHERE][SetBlasThreshold][] Set faiss::distance_compute_blas_threshold to 16384
+2025-05-12 02:38:08,219 INFO [default] [KNOWHERE][SetEarlyStopThreshold][] Set faiss::early_stop_threshold to 0
+2025-05-12 02:38:08,219 INFO [default] [KNOWHERE][SetStatisticsLevel][] Set knowhere::STATISTICS_LEVEL to 0
+2025-05-12 02:38:08,220 INFO [default] [KNOWHERE][SetSimdType][] FAISS expect simdType::AUTO
+2025-05-12 02:38:08,220 INFO [default] [KNOWHERE][SetSimdType][] FAISS hook REF
+2025-05-12 02:38:08,220 DEBUG [default] [SERVER][operator()][] Config easylogging with yaml file: D:\Human Centered NLP\conversation-ai\Python-Server\milvus_data/configs/easylogging.yaml
+2025-05-12 02:38:08,220 DEBUG [default] [SEGCORE][SetIndexSliceSize][] set config index slice size(byte): 16777216
+2025-05-12 02:38:08,220 DEBUG [default] [SEGCORE][SetThreadCoreCoefficient][] set thread pool core coefficient: 10
+2025-05-12 02:38:08,223 DEBUG [default] [SEGCORE][SegcoreSetSimdType][] set config simd_type: auto
+2025-05-12 02:38:08,223 INFO [default] [KNOWHERE][SetSimdType][] FAISS expect simdType::AUTO
+2025-05-12 02:38:08,223 INFO [default] [KNOWHERE][SetSimdType][] FAISS hook REF
+2025-05-12 02:38:31,811 INFO [default] [SEGCORE][N6milvus10ThreadPoolE::ThreadPool][] Thread pool's worker num:160
+2025-05-12 02:46:06,107 INFO [default] [KNOWHERE][SetBlasThreshold][] Set faiss::distance_compute_blas_threshold to 16384
+2025-05-12 02:46:06,107 INFO [default] [KNOWHERE][SetEarlyStopThreshold][] Set faiss::early_stop_threshold to 0
+2025-05-12 02:46:06,107 INFO [default] [KNOWHERE][SetStatisticsLevel][] Set knowhere::STATISTICS_LEVEL to 0
+2025-05-12 02:46:06,107 INFO [default] [KNOWHERE][SetBlasThreshold][] Set faiss::distance_compute_blas_threshold to 16384
+2025-05-12 02:46:06,107 INFO [default] [KNOWHERE][SetEarlyStopThreshold][] Set faiss::early_stop_threshold to 0
+2025-05-12 02:46:06,107 INFO [default] [KNOWHERE][SetStatisticsLevel][] Set knowhere::STATISTICS_LEVEL to 0
+2025-05-12 02:46:06,107 DEBUG [default] [SERVER][operator()][] Config easylogging with yaml file: D:\Human Centered NLP\conversation-ai\Python-Server\milvus_data/configs/easylogging.yaml
+2025-05-12 02:46:06,108 DEBUG [default] [SERVER][operator()][] Config easylogging with yaml file: D:\Human Centered NLP\conversation-ai\Python-Server\milvus_data/configs/easylogging.yaml
+2025-05-12 02:46:06,108 INFO [default] [KNOWHERE][SetSimdType][] FAISS expect simdType::AUTO
+2025-05-12 02:46:06,109 INFO [default] [KNOWHERE][SetSimdType][] FAISS hook REF
+2025-05-12 02:46:06,109 DEBUG [default] [SEGCORE][SetIndexSliceSize][] set config index slice size(byte): 16777216
+2025-05-12 02:46:06,109 DEBUG [default] [SEGCORE][SetThreadCoreCoefficient][] set thread pool core coefficient: 10
+2025-05-12 02:46:06,109 DEBUG [default] [SEGCORE][SegcoreSetSimdType][] set config simd_type: auto
+2025-05-12 02:46:06,109 INFO [default] [KNOWHERE][SetSimdType][] FAISS expect simdType::AUTO
+2025-05-12 02:46:06,109 INFO [default] [KNOWHERE][SetSimdType][] FAISS hook REF
+2025-05-12 02:46:28,743 INFO [default] [SEGCORE][N6milvus10ThreadPoolE::ThreadPool][] Thread pool's worker num:160
+2025-05-12 03:25:09,298 INFO [default] [KNOWHERE][SetBlasThreshold][] Set faiss::distance_compute_blas_threshold to 16384
+2025-05-12 03:25:09,299 INFO [default] [KNOWHERE][SetEarlyStopThreshold][] Set faiss::early_stop_threshold to 0
+2025-05-12 03:25:09,299 INFO [default] [KNOWHERE][SetStatisticsLevel][] Set knowhere::STATISTICS_LEVEL to 0
+2025-05-12 03:25:09,299 INFO [default] [KNOWHERE][SetBlasThreshold][] Set faiss::distance_compute_blas_threshold to 16384
+2025-05-12 03:25:09,299 INFO [default] [KNOWHERE][SetEarlyStopThreshold][] Set faiss::early_stop_threshold to 0
+2025-05-12 03:25:09,299 INFO [default] [KNOWHERE][SetStatisticsLevel][] Set knowhere::STATISTICS_LEVEL to 0
+2025-05-12 03:25:09,299 DEBUG [default] [SERVER][operator()][] Config easylogging with yaml file: D:\Human Centered NLP\conversation-ai\Python-Server\milvus_data/configs/easylogging.yaml
+2025-05-12 03:25:09,299 DEBUG [default] [SERVER][operator()][] Config easylogging with yaml file: D:\Human Centered NLP\conversation-ai\Python-Server\milvus_data/configs/easylogging.yaml
+2025-05-12 03:25:09,299 INFO [default] [KNOWHERE][SetSimdType][] FAISS expect simdType::AUTO
+2025-05-12 03:25:09,300 INFO [default] [KNOWHERE][SetSimdType][] FAISS hook REF
+2025-05-12 03:25:09,300 DEBUG [default] [SEGCORE][SetIndexSliceSize][] set config index slice size(byte): 16777216
+2025-05-12 03:25:09,300 DEBUG [default] [SEGCORE][SetThreadCoreCoefficient][] set thread pool core coefficient: 10
+2025-05-12 03:25:09,301 DEBUG [default] [SEGCORE][SegcoreSetSimdType][] set config simd_type: auto
+2025-05-12 03:25:09,301 INFO [default] [KNOWHERE][SetSimdType][] FAISS expect simdType::AUTO
+2025-05-12 03:25:09,301 INFO [default] [KNOWHERE][SetSimdType][] FAISS hook REF
+2025-05-12 03:25:32,883 INFO [default] [SEGCORE][N6milvus10ThreadPoolE::ThreadPool][] Thread pool's worker num:160
+2025-05-12 03:33:53,578 INFO [default] [KNOWHERE][SetBlasThreshold][] Set faiss::distance_compute_blas_threshold to 16384
+2025-05-12 03:33:53,579 INFO [default] [KNOWHERE][SetEarlyStopThreshold][] Set faiss::early_stop_threshold to 0
+2025-05-12 03:33:53,579 INFO [default] [KNOWHERE][SetStatisticsLevel][] Set knowhere::STATISTICS_LEVEL to 0
+2025-05-12 03:33:53,579 INFO [default] [KNOWHERE][SetBlasThreshold][] Set faiss::distance_compute_blas_threshold to 16384
+2025-05-12 03:33:53,579 INFO [default] [KNOWHERE][SetEarlyStopThreshold][] Set faiss::early_stop_threshold to 0
+2025-05-12 03:33:53,579 INFO [default] [KNOWHERE][SetStatisticsLevel][] Set knowhere::STATISTICS_LEVEL to 0
+2025-05-12 03:33:53,580 DEBUG [default] [SERVER][operator()][] Config easylogging with yaml file: D:\Human Centered NLP\conversation-ai\Python-Server\milvus_data/configs/easylogging.yaml
+2025-05-12 03:33:53,580 DEBUG [default] [SERVER][operator()][] Config easylogging with yaml file: D:\Human Centered NLP\conversation-ai\Python-Server\milvus_data/configs/easylogging.yaml
+2025-05-12 03:33:53,580 INFO [default] [KNOWHERE][SetSimdType][] FAISS expect simdType::AUTO
+2025-05-12 03:33:53,581 INFO [default] [KNOWHERE][SetSimdType][] FAISS hook REF
+2025-05-12 03:33:53,581 DEBUG [default] [SEGCORE][SetIndexSliceSize][] set config index slice size(byte): 16777216
+2025-05-12 03:33:53,581 DEBUG [default] [SEGCORE][SetThreadCoreCoefficient][] set thread pool core coefficient: 10
+2025-05-12 03:33:53,581 DEBUG [default] [SEGCORE][SegcoreSetSimdType][] set config simd_type: auto
+2025-05-12 03:33:53,581 INFO [default] [KNOWHERE][SetSimdType][] FAISS expect simdType::AUTO
+2025-05-12 03:33:53,582 INFO [default] [KNOWHERE][SetSimdType][] FAISS hook REF
+2025-05-12 03:34:05,146 INFO [default] [SEGCORE][N6milvus10ThreadPoolE::ThreadPool][] Thread pool's worker num:160

@@ -1,4 +1,4 @@
-2025/04/28 22:52:04 maxprocs: Leaving GOMAXPROCS=16: CPU quota undefined
+2025/05/12 03:33:52 maxprocs: Leaving GOMAXPROCS=16: CPU quota undefined
 
     __  _________ _   ____  ______    
    /  |/  /  _/ /| | / / / / / __/    
@@ -12,12 +12,6 @@ GitCommit: af56b2843
 GoVersion: go version go1.18 windows/amd64
 
 open pid file: run/standalone.pid
-panic: file standalone.pid write fail, error = write run/standalone.pid: The process cannot access the file because another process has locked a portion of the file.
-
-goroutine 1 [running]:
-github.com/milvus-io/milvus/cmd/milvus.(*run).execute(0x22ab893ffff?, {0xc000156000?, 0x3, 0x4}, 0xc000400240)
-	D:/a/milvus-lite/milvus-lite/milvus_binary/milvus/cmd/milvus/run.go:49 +0x329
-github.com/milvus-io/milvus/cmd/milvus.RunMilvus({0xc000156000?, 0x3, 0x4})
-	D:/a/milvus-lite/milvus-lite/milvus_binary/milvus/cmd/milvus/milvus.go:60 +0x20e
-main.main()
-	D:/a/milvus-lite/milvus-lite/milvus_binary/milvus/cmd/main.go:95 +0x378
+lock pid file: run/standalone.pid
+ASSERTION FAILURE FROM EASYLOGGING++ (LINE: 306) [(assertionPassed = base::utils::File::pathExists(configurationFile.c_str(), true)) == true] WITH MESSAGE "Configuration file [D:\Human Centered NLP\conversation-ai\Python-Server\milvus_data/configs/easylogging.yaml] does not exist!"
+ASSERTION FAILURE FROM EASYLOGGING++ (LINE: 306) [(assertionPassed = base::utils::File::pathExists(configurationFile.c_str(), true)) == true] WITH MESSAGE "Configuration file [D:\Human Centered NLP\conversation-ai\Python-Server\milvus_data/configs/easylogging.yaml] does not exist!"

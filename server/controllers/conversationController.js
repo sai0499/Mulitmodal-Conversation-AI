@@ -1,3 +1,5 @@
+// controllers/conversationController.js
+
 const fs = require('fs');
 const axios = require('axios');
 const Conversation = require('../models/Conversation');
@@ -20,20 +22,19 @@ exports.getConversations = async (req, res) => {
 
 /**
  * POST /api/conversation
- * Creates (or updates) a conversation by appending the user's message,
- * generating a bot reply via the Gemini API, and saving both in the database.
- * A conversationId may be passed in to append a message to an existing conversation.
- * Supports file uploads via multer.
+ * Appends the user's message, builds a memory-aware prompt,
+ * sends both `text` (the full prompt) and `rawQuery` (just the user text)
+ * to the Gemini endpoint, and saves the reply.
  */
 exports.sendMessage = async (req, res) => {
   try {
     const userId = req.user.userId;
     const { text, conversationId } = req.body;
-
     if (!text || text.trim() === '') {
       return res.status(400).json({ success: false, message: 'Message text required' });
     }
 
+    // 1. Load or create the Conversation
     let conversation;
     if (conversationId) {
       conversation = await Conversation.findOne({ _id: conversationId, user: userId });
@@ -42,22 +43,22 @@ exports.sendMessage = async (req, res) => {
       }
     } else {
       conversation = new Conversation({ user: userId, messages: [] });
-      // Generate a conversation title using the Gemini API.
+      // Generate an initial title
       try {
         const titlePrompt = `Generate a concise and descriptive title for a conversation based on the following user message: "${text}". Give me only the title as reply.`;
-        const geminiTitleResponse = await axios.post(
-          'http://localhost:5000/api/gemini',
+        const titleResp = await axios.post(
+          process.env.GEMINI_URL || 'http://localhost:5000/api/gemini',
           { text: titlePrompt, skipApiKeyValidation: true },
           { headers: { 'Content-Type': 'application/json' } }
         );
-        conversation.title = geminiTitleResponse.data.reply;
+        conversation.title = titleResp.data.reply;
       } catch (titleErr) {
-        console.error("Error generating conversation title", titleErr);
+        console.error('Error generating conversation title:', titleErr);
         conversation.title = text.substring(0, 20) || 'New Chat';
       }
     }
 
-    // Process attached files if any (provided by multer)
+    // 2. Handle any uploaded files
     const attachedFiles = req.files
       ? req.files.map(file => ({
           name: file.filename,
@@ -66,20 +67,31 @@ exports.sendMessage = async (req, res) => {
         }))
       : [];
 
-    // Append the user's message (with file details) to the conversation.
+    // 3. Append the new user message
     conversation.messages.push({ sender: 'user', text, files: attachedFiles });
 
-    // Retrieve the user's encrypted API key from the database.
+    // 4. Fetch the user's encrypted API key
     const userDoc = await User.findById(userId).select('apiKey');
     const encryptedApiKey = (userDoc && userDoc.apiKey) ? userDoc.apiKey : null;
 
-    // Generate the bot reply using the Gemini API.
-    // The encrypted API key is sent to the Gemini endpoint, which will decrypt it before using it.
+    // 5. Build the transcript of the last N turns
+    const MAX_TURNS = 20;
+    const turns = conversation.messages.slice(-MAX_TURNS);
+    const transcript = turns.map(msg => {
+      const role = msg.sender === 'user' ? 'User' : 'Assistant';
+      return `${role}: ${msg.text}`;
+    }).join('\n');
+    const fullPrompt = `${transcript}\nAssistant:`;
+
+    // 6. Call Gemini with both fullPrompt and rawQuery
     let botReply = '';
     try {
       const geminiResponse = await axios.post(
-        'http://localhost:5000/api/gemini',
-        { text },
+        process.env.GEMINI_URL || 'http://localhost:5000/api/gemini',
+        {
+          text: fullPrompt,
+          rawQuery: text
+        },
         {
           headers: {
             'Content-Type': 'application/json',
@@ -90,15 +102,14 @@ exports.sendMessage = async (req, res) => {
       botReply = geminiResponse.data.reply;
     } catch (err) {
       console.error('Error querying Gemini API:', err);
-      botReply = `Bot reply to: "${text}"`;
+      botReply = `I’m sorry, I couldn’t process your request right now.`;
     }
 
-    // Append the bot's reply to the conversation.
+    // 7. Append and save
     conversation.messages.push({ sender: 'bot', text: botReply, files: [] });
-
-    // Save the conversation.
     await conversation.save();
 
+    // 8. Return the reply
     return res.json({
       success: true,
       conversationId: conversation._id,
@@ -106,14 +117,14 @@ exports.sendMessage = async (req, res) => {
       title: conversation.title,
     });
   } catch (error) {
-    console.error('Error sending message:', error);
+    console.error('Error in sendMessage:', error);
     return res.status(500).json({ success: false, message: 'Server error' });
   }
 };
 
 /**
  * GET /api/conversation/:id
- * Returns a single conversation (including its full message history) for the authenticated user.
+ * Returns a single conversation’s full history.
  */
 exports.getConversationById = async (req, res) => {
   try {
@@ -132,8 +143,7 @@ exports.getConversationById = async (req, res) => {
 
 /**
  * DELETE /api/conversation/:id
- * Deletes a conversation (including all its messages) for the authenticated user.
- * Also removes any associated files from disk.
+ * Deletes a conversation and any attached files.
  */
 exports.deleteConversation = async (req, res) => {
   try {
@@ -144,21 +154,14 @@ exports.deleteConversation = async (req, res) => {
       return res.status(404).json({ success: false, message: 'Conversation not found' });
     }
 
-    // Remove associated files from disk.
     conversation.messages.forEach(message => {
-      if (message.files && message.files.length > 0) {
-        message.files.forEach(file => {
-          if (file.path) {
-            fs.unlink(file.path, err => {
-              if (err) {
-                console.error(`Error deleting file ${file.path}:`, err);
-              } else {
-                console.log(`Successfully deleted file: ${file.path}`);
-              }
-            });
-          }
-        });
-      }
+      (message.files || []).forEach(file => {
+        if (file.path) {
+          fs.unlink(file.path, err => {
+            if (err) console.error(`Error deleting file ${file.path}:`, err);
+          });
+        }
+      });
     });
 
     await Conversation.deleteOne({ _id: id });
@@ -167,7 +170,7 @@ exports.deleteConversation = async (req, res) => {
       message: 'Conversation and associated files deleted successfully.',
     });
   } catch (error) {
-    console.error("Error deleting conversation:", error);
-    return res.status(500).json({ success: false, message: "Server error" });
+    console.error('Error deleting conversation:', error);
+    return res.status(500).json({ success: false, message: 'Server error' });
   }
 };

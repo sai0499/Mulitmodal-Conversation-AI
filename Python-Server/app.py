@@ -8,6 +8,7 @@ from flask_cors import CORS
 from dotenv import load_dotenv
 from milvus import default_server
 from pymilvus import connections
+
 from decryption_util import decrypt_api_key
 from serpAPI import get_answer_box_and_top_organic_results
 from gemini_api import query_gemini_api
@@ -16,23 +17,23 @@ from FineTunedIntentClassifierModel import load_model as load_intent_model, clas
 from stt_transcriber import transcribe_audio
 from whisper_model import model as whisper_model
 
+# ————————————————
 # Load environment variables
 dotenv_path = os.path.join(os.path.dirname(__file__), ".env")
 load_dotenv(dotenv_path)
 
-# Set up logging
+# ————————————————
+# Logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Start Milvus-Lite server at application startup
+# ————————————————
+# Start Milvus-Lite server at startup
 default_server.set_base_dir("./milvus_data")
 default_server.start()
 milvus_port = default_server.listen_port
 logger.info("Milvus-Lite running at http://127.0.0.1:%d", milvus_port)
-# Establish Milvus connection
 connections.connect(alias="default", host="127.0.0.1", port=milvus_port)
-
-# Register shutdown hook to stop Milvus when application exits
 
 def shutdown_milvus():
     try:
@@ -48,141 +49,155 @@ def shutdown_milvus():
 
 atexit.register(shutdown_milvus)
 
+# ————————————————
 # Initialize Flask app
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
 app.config['UPLOAD_FOLDER'] = tempfile.gettempdir()
 
-# Global flag for search mode
+# ————————————————
+# Global flag for forcing web-search mode
 GLOBAL_SEARCH_MODE = False
 
-# Load the intent classifier model once at startup
+label_map_path = "./intent_model_lora/label_map.json"
+with open(label_map_path, "r") as f:
+    label_map = json.load(f)      # e.g. {"RAG Search":0, "web search":1, "slot filling":2, "small talk":3}
+inv_label_map = {v: k for k, v in label_map.items()}
+
+# Load the intent classifier once
 try:
     classifier_model, classifier_tokenizer = load_intent_model("./intent_model_lora")
-    logger.info("Intent classifier model loaded successfully.")
+    logger.info("Intent classifier model loaded.")
 except Exception as e:
-    logger.error("Failed to load intent classifier model: %s", e)
-    classifier_model, classifier_tokenizer = None, None
+    logger.error("Failed to load intent classifier: %s", e)
+    classifier_model = classifier_tokenizer = None
 
+# ————————————————
+# The fixed role‐prompt that defines your LLM’s persona
+LLM_ROLE_PROMPT = (
+    "Role: You are an AI Assistant named Lucy in Uni-Ask who helps students at the Otto von Guriecke University(OVGU)."
+    "with any university-related questions."
+)
+
+# ————————————————
 @app.route('/api/search-toggle', methods=['POST'])
 def set_search_mode():
     global GLOBAL_SEARCH_MODE
     data = request.get_json()
     if not data or 'searchMode' not in data:
-        return jsonify({"error": "No search mode provided"}), 400
+        return jsonify({"error": "No search mode provided."}), 400
     GLOBAL_SEARCH_MODE = bool(data['searchMode'])
     logger.info("Global search mode set to %s", GLOBAL_SEARCH_MODE)
     return jsonify({"search_mode": GLOBAL_SEARCH_MODE}), 200
 
+# ————————————————
 @app.route('/api/gemini', methods=['POST'])
 def gemini_endpoint():
     data = request.get_json()
     if not data or 'text' not in data:
         return jsonify({"error": "No text provided."}), 400
 
-    query = data['text']
-    skip_validation = data.get("skipApiKeyValidation", False)
+    # 1) Split the incoming fields
+    user_transcript = data['text']                  # this is the history + "Assistant:" tail
+    raw_query       = data.get('rawQuery', user_transcript)
+    skip_validation = data.get('skipApiKeyValidation', False)
 
+    # 2) Always start the final prompt with the LLM role‐prompt
+    #    + a blank line + the transcript (history + "Assistant:")
+    base_prompt = f"{LLM_ROLE_PROMPT}\n\n{user_transcript}"
+
+    # 3) If skipping classification/retrieval, use only base_prompt
     if skip_validation:
-        full_prompt = query
-    else:
-        encrypted_api_key = request.headers.get("X-User-ApiKey") or data.get("apiKey")
-        decrypted_api_key = None
-        if encrypted_api_key:
-            try:
-                decrypted_api_key = decrypt_api_key(encrypted_api_key)
-            except Exception as e:
-                logger.error("Error decrypting API key: %s", e)
-                return jsonify({"error": "Failed to decrypt API key."}), 500
-        else:
-            logger.warning("No API key provided; continuing without API key.")
+        full_prompt = base_prompt
 
-        # Determine intent
+    else:
+        # 4) Decrypt user API key if provided
+        enc_key = request.headers.get("X-User-ApiKey") or data.get("apiKey")
+        dec_key = None
+        if enc_key:
+            try:
+                dec_key = decrypt_api_key(enc_key)
+            except Exception as e:
+                logger.error("API key decryption failed: %s", e)
+                return jsonify({"error": "Failed to decrypt API key."}), 500
+
+        # 5) Classify only the fresh user query
         if GLOBAL_SEARCH_MODE:
             intent = "web search"
         else:
-            if classifier_model is None or classifier_tokenizer is None:
-                return jsonify({"error": "Intent classifier is not available."}), 500
-            label = classify_intent(classifier_model, classifier_tokenizer, query)
-            intent = "web search" if label == 1 else "RAG Search"
-        logger.info("Query classified as: %s", intent)
+            if not (classifier_model and classifier_tokenizer):
+                return jsonify({"error": "Intent classifier unavailable."}), 500
+            label  = classify_intent(classifier_model, classifier_tokenizer, raw_query)
+            intent = inv_label_map.get(label, "unknown_intent")
+        logger.info("Classified intent: %s", intent)
 
-        # Build prompt
-        if intent == "web search" and decrypted_api_key:
+        # 6) Attach retrieval context _after_ the base_prompt
+        if intent == "web search" and dec_key:
             try:
-                serp_data = get_answer_box_and_top_organic_results(query, decrypted_api_key)
+                serp_data = get_answer_box_and_top_organic_results(raw_query, dec_key)
             except Exception as e:
-                logger.warning("SERP API call failed: %s", e)
+                logger.warning("SERP API failed: %s", e)
                 serp_data = None
 
             if serp_data:
                 serp_context = json.dumps(serp_data)
                 full_prompt = (
-                    "Role: You are an AI Assistant named Lucy in Uni-Ask who helps students with any university-related questions.\n\n"
-                    f"User Query: {query}\n\n"
-                    f"Web Search Results: {serp_context}\n\n"
-                    "Based on the above, generate a helpful and concise response with relevant web links. "
-                    "If the context doesn’t provide relevant information, say you don’t know. "
-                    "Ignore the context for general chit-chat or greetings."
+                    base_prompt +
+                    "\n\nWeb Search Results:\n" + serp_context +
+                    "\n\nBased on the conversation above and the web results, generate a helpful, concise response with relevant links."
                 )
             else:
-                full_prompt = query
+                full_prompt = base_prompt
 
         elif intent == "RAG Search":
             try:
-                chunks = retrieve(query, top_k=20)
-                context_lines = [
+                chunks = retrieve(raw_query, top_k=20)
+                rag_lines = [
                     f"Source: {c['source_path']} (chunk {c['chunk_id']}): {c['chunk_text']}"
                     for c in chunks
                 ]
-                rag_context = "\n".join(context_lines)
-                print(rag_context)
-
+                rag_context = "\n".join(rag_lines)
                 full_prompt = (
-                    "Role: You are an AI Assistant named Lucy in Uni-Ask who helps students with any university-related questions.\n\n"
-                    f"User Query: {query}\n\n"
-                    f"Retrieved Context:\n{rag_context}\n\n"
-                    "Based on the above, generate a helpful and concise response. "
-                    "If the context doesn’t have relevant information, say you don’t know. "
-                    "Ignore the context for general chit-chat or greetings."
+                    base_prompt +
+                    "\n\nRetrieved Context:\n" + rag_context +
+                    "\n\nBased on the conversation above and the retrieved context, generate a helpful, concise response referring to  the relevant docs"
                 )
             except Exception as e:
                 logger.error("RAG retrieval failed: %s", e)
-                full_prompt = query
-        else:
-            full_prompt = query
+                full_prompt = base_prompt
 
+        else:
+            full_prompt = base_prompt
+
+    # 7) Send the assembled prompt to Gemini
     try:
-        response_text = query_gemini_api(full_prompt)
-        payload = {"reply": response_text}
+        reply = query_gemini_api(full_prompt)
+        payload = {"reply": reply}
         if not skip_validation:
             payload["intent"] = intent
         return jsonify(payload), 200
-
     except Exception as e:
-        logger.error("Error processing query: %s", e)
-        return jsonify({"error": str(e)}), 500
+        logger.error("LLM call error: %s", e)
+        return jsonify({"error": "Failed to generate response."}), 500
 
+# ————————————————
 @app.route('/api/transcribe', methods=['POST'])
 def transcribe_audio_endpoint():
     if 'audio' not in request.files:
-        return jsonify({"error": "No audio file provided"}), 400
-
+        return jsonify({"error": "No audio file provided."}), 400
     file = request.files['audio']
-    if file.filename == '':
-        return jsonify({"error": "No selected file"}), 400
-
     file_path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
     try:
         file.save(file_path)
-        transcription = transcribe_audio(file_path, whisper_model)
+        text = transcribe_audio(file_path, whisper_model)
         os.remove(file_path)
-        return jsonify({"transcription": transcription}), 200
+        return jsonify({"transcription": text}), 200
     except Exception as e:
         if os.path.exists(file_path):
             os.remove(file_path)
         logger.error("Transcription error: %s", e)
-        return jsonify({"error": str(e)}), 500
+        return jsonify({"error": "Transcription failed."}), 500
 
+# ————————————————
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000, debug=False)

@@ -1,0 +1,285 @@
+2025/05/11-23:55:54.923000 1efc RocksDB version: 6.26.1
+2025/05/11-23:55:54.923214 1efc Git sha 0
+2025/05/11-23:55:54.923228 1efc Compile date 2021-12-13 18:23:52
+2025/05/11-23:55:54.923386 1efc DB SUMMARY
+2025/05/11-23:55:54.923395 1efc DB Session ID:  Q3XVCEOFTYQXT7AY27S8
+2025/05/11-23:55:54.924270 1efc CURRENT file:  CURRENT
+2025/05/11-23:55:54.924289 1efc IDENTITY file:  IDENTITY
+2025/05/11-23:55:54.924310 1efc MANIFEST file:  MANIFEST-000037 size: 301 Bytes
+2025/05/11-23:55:54.924316 1efc SST files in D:\Human Centered NLP\conversation-ai\Python-Server\milvus_data\data\rocketmq_meta_kv dir, Total Num: 2, files: 000032.sst 000036.sst 
+2025/05/11-23:55:54.924322 1efc Write Ahead Log file in D:\Human Centered NLP\conversation-ai\Python-Server\milvus_data\data\rocketmq_meta_kv: 000038.log size: 36 ; 
+2025/05/11-23:55:54.924415 1efc                         Options.error_if_exists: 0
+2025/05/11-23:55:54.924421 1efc                       Options.create_if_missing: 1
+2025/05/11-23:55:54.924423 1efc                         Options.paranoid_checks: 1
+2025/05/11-23:55:54.924425 1efc             Options.flush_verify_memtable_count: 1
+2025/05/11-23:55:54.924427 1efc                               Options.track_and_verify_wals_in_manifest: 0
+2025/05/11-23:55:54.924429 1efc                                     Options.env: 00000274f2afabf0
+2025/05/11-23:55:54.924431 1efc                                      Options.fs: WinFS
+2025/05/11-23:55:54.924433 1efc                                Options.info_log: 00000274f2b85ff0
+2025/05/11-23:55:54.924435 1efc                Options.max_file_opening_threads: 16
+2025/05/11-23:55:54.924437 1efc                              Options.statistics: 0000000000000000
+2025/05/11-23:55:54.924439 1efc                               Options.use_fsync: 0
+2025/05/11-23:55:54.924441 1efc                       Options.max_log_file_size: 0
+2025/05/11-23:55:54.924443 1efc                  Options.max_manifest_file_size: 1073741824
+2025/05/11-23:55:54.924445 1efc                   Options.log_file_time_to_roll: 0
+2025/05/11-23:55:54.924447 1efc                       Options.keep_log_file_num: 1000
+2025/05/11-23:55:54.924449 1efc                    Options.recycle_log_file_num: 0
+2025/05/11-23:55:54.924450 1efc                         Options.allow_fallocate: 1
+2025/05/11-23:55:54.924452 1efc                        Options.allow_mmap_reads: 0
+2025/05/11-23:55:54.924454 1efc                       Options.allow_mmap_writes: 0
+2025/05/11-23:55:54.924456 1efc                        Options.use_direct_reads: 0
+2025/05/11-23:55:54.924458 1efc                        Options.use_direct_io_for_flush_and_compaction: 0
+2025/05/11-23:55:54.924459 1efc          Options.create_missing_column_families: 0
+2025/05/11-23:55:54.924461 1efc                              Options.db_log_dir: 
+2025/05/11-23:55:54.924463 1efc                                 Options.wal_dir: 
+2025/05/11-23:55:54.924465 1efc                Options.table_cache_numshardbits: 6
+2025/05/11-23:55:54.924467 1efc                         Options.WAL_ttl_seconds: 0
+2025/05/11-23:55:54.924468 1efc                       Options.WAL_size_limit_MB: 0
+2025/05/11-23:55:54.924470 1efc                        Options.max_write_batch_group_size_bytes: 1048576
+2025/05/11-23:55:54.924472 1efc             Options.manifest_preallocation_size: 4194304
+2025/05/11-23:55:54.924474 1efc                     Options.is_fd_close_on_exec: 1
+2025/05/11-23:55:54.924476 1efc                   Options.advise_random_on_open: 1
+2025/05/11-23:55:54.924478 1efc                   Options.experimental_mempurge_threshold: 0.000000
+2025/05/11-23:55:54.924652 1efc                    Options.db_write_buffer_size: 0
+2025/05/11-23:55:54.924655 1efc                    Options.write_buffer_manager: 00000274f2b5f860
+2025/05/11-23:55:54.924657 1efc         Options.access_hint_on_compaction_start: 1
+2025/05/11-23:55:54.924658 1efc  Options.new_table_reader_for_compaction_inputs: 0
+2025/05/11-23:55:54.924660 1efc           Options.random_access_max_buffer_size: 1048576
+2025/05/11-23:55:54.924662 1efc                      Options.use_adaptive_mutex: 0
+2025/05/11-23:55:54.924681 1efc                            Options.rate_limiter: 0000000000000000
+2025/05/11-23:55:54.924688 1efc     Options.sst_file_manager.rate_bytes_per_sec: 0
+2025/05/11-23:55:54.924690 1efc                       Options.wal_recovery_mode: 2
+2025/05/11-23:55:54.924691 1efc                  Options.enable_thread_tracking: 0
+2025/05/11-23:55:54.924693 1efc                  Options.enable_pipelined_write: 0
+2025/05/11-23:55:54.924695 1efc                  Options.unordered_write: 0
+2025/05/11-23:55:54.924697 1efc         Options.allow_concurrent_memtable_write: 1
+2025/05/11-23:55:54.924699 1efc      Options.enable_write_thread_adaptive_yield: 1
+2025/05/11-23:55:54.924701 1efc             Options.write_thread_max_yield_usec: 100
+2025/05/11-23:55:54.924703 1efc            Options.write_thread_slow_yield_usec: 3
+2025/05/11-23:55:54.924704 1efc                               Options.row_cache: None
+2025/05/11-23:55:54.924706 1efc                              Options.wal_filter: None
+2025/05/11-23:55:54.924708 1efc             Options.avoid_flush_during_recovery: 0
+2025/05/11-23:55:54.924710 1efc             Options.allow_ingest_behind: 0
+2025/05/11-23:55:54.924712 1efc             Options.preserve_deletes: 0
+2025/05/11-23:55:54.924714 1efc             Options.two_write_queues: 0
+2025/05/11-23:55:54.924715 1efc             Options.manual_wal_flush: 0
+2025/05/11-23:55:54.924717 1efc             Options.atomic_flush: 0
+2025/05/11-23:55:54.924719 1efc             Options.avoid_unnecessary_blocking_io: 0
+2025/05/11-23:55:54.924721 1efc                 Options.persist_stats_to_disk: 0
+2025/05/11-23:55:54.924723 1efc                 Options.write_dbid_to_manifest: 0
+2025/05/11-23:55:54.924725 1efc                 Options.log_readahead_size: 0
+2025/05/11-23:55:54.924726 1efc                 Options.file_checksum_gen_factory: Unknown
+2025/05/11-23:55:54.924729 1efc                 Options.best_efforts_recovery: 0
+2025/05/11-23:55:54.924730 1efc                Options.max_bgerror_resume_count: 2147483647
+2025/05/11-23:55:54.924732 1efc            Options.bgerror_resume_retry_interval: 1000000
+2025/05/11-23:55:54.924734 1efc             Options.allow_data_in_errors: 0
+2025/05/11-23:55:54.924736 1efc             Options.db_host_id: __hostname__
+2025/05/11-23:55:54.924738 1efc             Options.max_background_jobs: 2
+2025/05/11-23:55:54.924740 1efc             Options.max_background_compactions: -1
+2025/05/11-23:55:54.924742 1efc             Options.max_subcompactions: 1
+2025/05/11-23:55:54.924743 1efc             Options.avoid_flush_during_shutdown: 0
+2025/05/11-23:55:54.924745 1efc           Options.writable_file_max_buffer_size: 1048576
+2025/05/11-23:55:54.924747 1efc             Options.delayed_write_rate : 16777216
+2025/05/11-23:55:54.924749 1efc             Options.max_total_wal_size: 0
+2025/05/11-23:55:54.924751 1efc             Options.delete_obsolete_files_period_micros: 21600000000
+2025/05/11-23:55:54.924753 1efc                   Options.stats_dump_period_sec: 600
+2025/05/11-23:55:54.924754 1efc                 Options.stats_persist_period_sec: 600
+2025/05/11-23:55:54.924756 1efc                 Options.stats_history_buffer_size: 1048576
+2025/05/11-23:55:54.924758 1efc                          Options.max_open_files: -1
+2025/05/11-23:55:54.924760 1efc                          Options.bytes_per_sync: 0
+2025/05/11-23:55:54.924762 1efc                      Options.wal_bytes_per_sync: 0
+2025/05/11-23:55:54.924763 1efc                   Options.strict_bytes_per_sync: 0
+2025/05/11-23:55:54.924765 1efc       Options.compaction_readahead_size: 0
+2025/05/11-23:55:54.924767 1efc                  Options.max_background_flushes: 1
+2025/05/11-23:55:54.924769 1efc Compression algorithms supported:
+2025/05/11-23:55:54.924772 1efc 	kZSTD supported: 1
+2025/05/11-23:55:54.924774 1efc 	kXpressCompression supported: 0
+2025/05/11-23:55:54.924775 1efc 	kBZip2Compression supported: 1
+2025/05/11-23:55:54.924777 1efc 	kZSTDNotFinalCompression supported: 1
+2025/05/11-23:55:54.924779 1efc 	kLZ4Compression supported: 1
+2025/05/11-23:55:54.924791 1efc 	kZlibCompression supported: 1
+2025/05/11-23:55:54.924794 1efc 	kLZ4HCCompression supported: 1
+2025/05/11-23:55:54.924796 1efc 	kSnappyCompression supported: 1
+2025/05/11-23:55:54.924802 1efc Fast CRC32 supported: Supported on x86
+2025/05/11-23:55:54.926325 1efc [db/version_set.cc:4847] Recovering from manifest file: D:\Human Centered NLP\conversation-ai\Python-Server\milvus_data\data\rocketmq_meta_kv/MANIFEST-000037
+2025/05/11-23:55:54.928322 1efc [db/column_family.cc:609] --------------- Options for column family [default]:
+2025/05/11-23:55:54.928331 1efc               Options.comparator: leveldb.BytewiseComparator
+2025/05/11-23:55:54.928334 1efc           Options.merge_operator: None
+2025/05/11-23:55:54.928336 1efc        Options.compaction_filter: None
+2025/05/11-23:55:54.928338 1efc        Options.compaction_filter_factory: None
+2025/05/11-23:55:54.928340 1efc  Options.sst_partitioner_factory: None
+2025/05/11-23:55:54.928342 1efc         Options.memtable_factory: SkipListFactory
+2025/05/11-23:55:54.928344 1efc            Options.table_factory: BlockBasedTable
+2025/05/11-23:55:54.928369 1efc            table_factory options:   flush_block_policy_factory: FlushBlockBySizePolicyFactory (00000274f2b6d940)
+  cache_index_and_filter_blocks: 0
+  cache_index_and_filter_blocks_with_high_priority: 1
+  pin_l0_filter_and_index_blocks_in_cache: 0
+  pin_top_level_index_and_filter: 1
+  index_type: 0
+  data_block_index_type: 0
+  index_shortening: 1
+  data_block_hash_table_util_ratio: 0.750000
+  hash_index_allow_collision: 1
+  checksum: 1
+  no_block_cache: 0
+  block_cache: 00000274f2b11cd0
+  block_cache_name: LRUCache
+  block_cache_options:
+    capacity : 886786867
+    num_shard_bits : 6
+    strict_capacity_limit : 0
+    memory_allocator : None
+    high_pri_pool_ratio: 0.500
+  block_cache_compressed: 0000000000000000
+  persistent_cache: 0000000000000000
+  block_size: 65536
+  block_size_deviation: 10
+  block_restart_interval: 16
+  index_block_restart_interval: 1
+  metadata_block_size: 4096
+  partition_filters: 0
+  use_delta_encoding: 1
+  filter_policy: nullptr
+  whole_key_filtering: 1
+  verify_compression: 0
+  read_amp_bytes_per_bit: 0
+  format_version: 5
+  enable_index_compression: 1
+  block_align: 0
+  max_auto_readahead_size: 262144
+  prepopulate_block_cache: 0
+2025/05/11-23:55:54.928373 1efc        Options.write_buffer_size: 67108864
+2025/05/11-23:55:54.928375 1efc  Options.max_write_buffer_number: 2
+2025/05/11-23:55:54.928554 1efc        Options.compression[0]: NoCompression
+2025/05/11-23:55:54.928558 1efc        Options.compression[1]: NoCompression
+2025/05/11-23:55:54.928560 1efc        Options.compression[2]: ZSTD
+2025/05/11-23:55:54.928562 1efc        Options.compression[3]: ZSTD
+2025/05/11-23:55:54.928564 1efc        Options.compression[4]: ZSTD
+2025/05/11-23:55:54.928566 1efc        Options.compression[5]: ZSTD
+2025/05/11-23:55:54.928567 1efc        Options.compression[6]: ZSTD
+2025/05/11-23:55:54.928569 1efc                  Options.bottommost_compression: Disabled
+2025/05/11-23:55:54.928571 1efc       Options.prefix_extractor: nullptr
+2025/05/11-23:55:54.928573 1efc   Options.memtable_insert_with_hint_prefix_extractor: nullptr
+2025/05/11-23:55:54.928575 1efc             Options.num_levels: 7
+2025/05/11-23:55:54.928577 1efc        Options.min_write_buffer_number_to_merge: 1
+2025/05/11-23:55:54.928579 1efc     Options.max_write_buffer_number_to_maintain: 0
+2025/05/11-23:55:54.928580 1efc     Options.max_write_buffer_size_to_maintain: 0
+2025/05/11-23:55:54.928582 1efc            Options.bottommost_compression_opts.window_bits: -14
+2025/05/11-23:55:54.928584 1efc                  Options.bottommost_compression_opts.level: 32767
+2025/05/11-23:55:54.928586 1efc               Options.bottommost_compression_opts.strategy: 0
+2025/05/11-23:55:54.928588 1efc         Options.bottommost_compression_opts.max_dict_bytes: 0
+2025/05/11-23:55:54.928590 1efc         Options.bottommost_compression_opts.zstd_max_train_bytes: 0
+2025/05/11-23:55:54.928592 1efc         Options.bottommost_compression_opts.parallel_threads: 1
+2025/05/11-23:55:54.928596 1efc                  Options.bottommost_compression_opts.enabled: false
+2025/05/11-23:55:54.928599 1efc         Options.bottommost_compression_opts.max_dict_buffer_bytes: 0
+2025/05/11-23:55:54.928601 1efc            Options.compression_opts.window_bits: -14
+2025/05/11-23:55:54.928603 1efc                  Options.compression_opts.level: 32767
+2025/05/11-23:55:54.928605 1efc               Options.compression_opts.strategy: 0
+2025/05/11-23:55:54.928606 1efc         Options.compression_opts.max_dict_bytes: 0
+2025/05/11-23:55:54.928608 1efc         Options.compression_opts.zstd_max_train_bytes: 0
+2025/05/11-23:55:54.928610 1efc         Options.compression_opts.parallel_threads: 1
+2025/05/11-23:55:54.928612 1efc                  Options.compression_opts.enabled: false
+2025/05/11-23:55:54.928614 1efc         Options.compression_opts.max_dict_buffer_bytes: 0
+2025/05/11-23:55:54.928616 1efc      Options.level0_file_num_compaction_trigger: 4
+2025/05/11-23:55:54.928618 1efc          Options.level0_slowdown_writes_trigger: 20
+2025/05/11-23:55:54.928620 1efc              Options.level0_stop_writes_trigger: 36
+2025/05/11-23:55:54.928621 1efc                   Options.target_file_size_base: 67108864
+2025/05/11-23:55:54.928623 1efc             Options.target_file_size_multiplier: 1
+2025/05/11-23:55:54.928625 1efc                Options.max_bytes_for_level_base: 268435456
+2025/05/11-23:55:54.928627 1efc Options.level_compaction_dynamic_level_bytes: 0
+2025/05/11-23:55:54.928629 1efc          Options.max_bytes_for_level_multiplier: 10.000000
+2025/05/11-23:55:54.928631 1efc Options.max_bytes_for_level_multiplier_addtl[0]: 1
+2025/05/11-23:55:54.928633 1efc Options.max_bytes_for_level_multiplier_addtl[1]: 1
+2025/05/11-23:55:54.928635 1efc Options.max_bytes_for_level_multiplier_addtl[2]: 1
+2025/05/11-23:55:54.928637 1efc Options.max_bytes_for_level_multiplier_addtl[3]: 1
+2025/05/11-23:55:54.928638 1efc Options.max_bytes_for_level_multiplier_addtl[4]: 1
+2025/05/11-23:55:54.928640 1efc Options.max_bytes_for_level_multiplier_addtl[5]: 1
+2025/05/11-23:55:54.928642 1efc Options.max_bytes_for_level_multiplier_addtl[6]: 1
+2025/05/11-23:55:54.928644 1efc       Options.max_sequential_skip_in_iterations: 8
+2025/05/11-23:55:54.928645 1efc                    Options.max_compaction_bytes: 1677721600
+2025/05/11-23:55:54.928647 1efc                        Options.arena_block_size: 1048576
+2025/05/11-23:55:54.928649 1efc   Options.soft_pending_compaction_bytes_limit: 68719476736
+2025/05/11-23:55:54.928651 1efc   Options.hard_pending_compaction_bytes_limit: 274877906944
+2025/05/11-23:55:54.928653 1efc       Options.rate_limit_delay_max_milliseconds: 100
+2025/05/11-23:55:54.928655 1efc                Options.disable_auto_compactions: 0
+2025/05/11-23:55:54.928658 1efc                        Options.compaction_style: kCompactionStyleLevel
+2025/05/11-23:55:54.928660 1efc                          Options.compaction_pri: kMinOverlappingRatio
+2025/05/11-23:55:54.928662 1efc Options.compaction_options_universal.size_ratio: 1
+2025/05/11-23:55:54.928664 1efc Options.compaction_options_universal.min_merge_width: 2
+2025/05/11-23:55:54.928665 1efc Options.compaction_options_universal.max_merge_width: 4294967295
+2025/05/11-23:55:54.928667 1efc Options.compaction_options_universal.max_size_amplification_percent: 200
+2025/05/11-23:55:54.928669 1efc Options.compaction_options_universal.compression_size_percent: -1
+2025/05/11-23:55:54.928671 1efc Options.compaction_options_universal.stop_style: kCompactionStopStyleTotalSize
+2025/05/11-23:55:54.928673 1efc Options.compaction_options_fifo.max_table_files_size: 1073741824
+2025/05/11-23:55:54.928675 1efc Options.compaction_options_fifo.allow_compaction: 0
+2025/05/11-23:55:54.928681 1efc                   Options.table_properties_collectors: 
+2025/05/11-23:55:54.928683 1efc                   Options.inplace_update_support: 0
+2025/05/11-23:55:54.928685 1efc                 Options.inplace_update_num_locks: 10000
+2025/05/11-23:55:54.928687 1efc               Options.memtable_prefix_bloom_size_ratio: 0.000000
+2025/05/11-23:55:54.928804 1efc               Options.memtable_whole_key_filtering: 0
+2025/05/11-23:55:54.928811 1efc   Options.memtable_huge_page_size: 0
+2025/05/11-23:55:54.928813 1efc                           Options.bloom_locality: 0
+2025/05/11-23:55:54.928815 1efc                    Options.max_successive_merges: 0
+2025/05/11-23:55:54.928817 1efc                Options.optimize_filters_for_hits: 0
+2025/05/11-23:55:54.928819 1efc                Options.paranoid_file_checks: 0
+2025/05/11-23:55:54.928821 1efc                Options.force_consistency_checks: 1
+2025/05/11-23:55:54.928822 1efc                Options.report_bg_io_stats: 0
+2025/05/11-23:55:54.928824 1efc                               Options.ttl: 2592000
+2025/05/11-23:55:54.928826 1efc          Options.periodic_compaction_seconds: 0
+2025/05/11-23:55:54.928828 1efc                       Options.enable_blob_files: false
+2025/05/11-23:55:54.928830 1efc                           Options.min_blob_size: 0
+2025/05/11-23:55:54.928832 1efc                          Options.blob_file_size: 268435456
+2025/05/11-23:55:54.928834 1efc                   Options.blob_compression_type: NoCompression
+2025/05/11-23:55:54.928836 1efc          Options.enable_blob_garbage_collection: false
+2025/05/11-23:55:54.928838 1efc      Options.blob_garbage_collection_age_cutoff: 0.250000
+2025/05/11-23:55:54.928841 1efc Options.blob_garbage_collection_force_threshold: 1.000000
+2025/05/11-23:55:54.937329 1efc [db/version_set.cc:4887] Recovered from manifest file:D:\Human Centered NLP\conversation-ai\Python-Server\milvus_data\data\rocketmq_meta_kv/MANIFEST-000037 succeeded,manifest_file_number is 37, next_file_number is 39, last_sequence is 462891, log_number is 30,prev_log_number is 0,max_column_family is 0,min_log_number_to_keep is 0
+2025/05/11-23:55:54.937346 1efc [db/version_set.cc:4902] Column family [default] (ID 0), log number is 30
+2025/05/11-23:55:54.938324 1efc [db/version_set.cc:4385] Creating manifest 41
+2025/05/11-23:55:54.941585 1efc EVENT_LOG_v1 {"time_micros": 1747000554941122, "job": 1, "event": "recovery_started", "wal_files": [38]}
+2025/05/11-23:55:54.941596 1efc [db/db_impl/db_impl_open.cc:876] Recovering log #38 mode 2
+2025/05/11-23:55:54.944754 1efc EVENT_LOG_v1 {"time_micros": 1747000554944738, "cf_name": "default", "job": 1, "event": "table_file_creation", "file_number": 42, "file_size": 966, "file_checksum": "", "file_checksum_func_name": "Unknown", "table_properties": {"data_size": 38, "index_size": 23, "index_partitions": 0, "top_level_index_size": 0, "index_key_is_user_key": 1, "index_value_is_delta_encoded": 1, "filter_size": 0, "raw_key_size": 14, "raw_average_key_size": 14, "raw_value_size": 8, "raw_average_value_size": 8, "num_data_blocks": 1, "num_entries": 1, "num_filter_entries": 0, "num_deletions": 0, "num_merge_operands": 0, "num_range_deletions": 0, "format_version": 0, "fixed_key_len": 0, "filter_policy": "", "column_family_name": "default", "column_family_id": 0, "comparator": "leveldb.BytewiseComparator", "merge_operator": "nullptr", "prefix_extractor_name": "nullptr", "property_collectors": "[]", "compression": "NoCompression", "compression_options": "window_bits=-14; level=32767; strategy=0; max_dict_bytes=0; zstd_max_train_bytes=0; enabled=0; max_dict_buffer_bytes=0; ", "creation_time": 1747000554, "oldest_key_time": 0, "file_creation_time": 0, "slow_compression_estimated_data_size": 0, "fast_compression_estimated_data_size": 0, "db_id": "d034d2fb-243c-11f0-96db-28d0438e552b", "db_session_id": "Q3XVCEOFTYQXT7AY27S8", "orig_file_number": 42}}
+2025/05/11-23:55:54.944792 1efc [db/version_set.cc:4385] Creating manifest 43
+2025/05/11-23:55:54.947051 1efc EVENT_LOG_v1 {"time_micros": 1747000554947048, "job": 1, "event": "recovery_finished"}
+2025/05/11-23:55:54.948124 1efc [file/delete_scheduler.cc:73] Deleted file D:\Human Centered NLP\conversation-ai\Python-Server\milvus_data\data\rocketmq_meta_kv/000038.log immediately, rate_bytes_per_sec 0, total_trash_size 0 max_trash_db_ratio 0.250000
+2025/05/11-23:55:54.952774 1efc [db/db_impl/db_impl_open.cc:1786] SstFileManager instance 00000274f2b97b20
+2025/05/11-23:55:54.952863 1efc DB pointer 00000274f2b9a2e0
+2025/05/11-23:55:54.953561 2360 [db/db_impl/db_impl.cc:1004] ------- DUMPING STATS -------
+2025/05/11-23:55:54.953572 2360 [db/db_impl/db_impl.cc:1006] 
+** DB Stats **
+Uptime(secs): 0.0 total, 0.0 interval
+Cumulative writes: 0 writes, 0 keys, 0 commit groups, 0.0 writes per commit group, ingest: 0.00 GB, 0.00 MB/s
+Cumulative WAL: 0 writes, 0 syncs, 0.00 writes per sync, written: 0.00 GB, 0.00 MB/s
+Cumulative stall: 00:00:0.000 H:M:S, 0.0 percent
+Interval writes: 0 writes, 0 keys, 0 commit groups, 0.0 writes per commit group, ingest: 0.00 MB, 0.00 MB/s
+Interval WAL: 0 writes, 0 syncs, 0.00 writes per sync, written: 0.00 GB, 0.00 MB/s
+Interval stall: 00:00:0.000 H:M:S, 0.0 percent
+
+** Compaction Stats [default] **
+Level    Files   Size     Score Read(GB)  Rn(GB) Rnp1(GB) Write(GB) Wnew(GB) Moved(GB) W-Amp Rd(MB/s) Wr(MB/s) Comp(sec) CompMergeCPU(sec) Comp(cnt) Avg(sec) KeyIn KeyDrop Rblob(GB) Wblob(GB)
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+  L0      2/0    2.10 KB   0.5      0.0     0.0      0.0       0.0      0.0       0.0   1.0      0.0      0.4      0.00              0.00         1    0.003       0      0       0.0       0.0
+  L1      1/0    1.77 KB   0.0      0.0     0.0      0.0       0.0      0.0       0.0   0.0      0.0      0.0      0.00              0.00         0    0.000       0      0       0.0       0.0
+ Sum      3/0    3.87 KB   0.0      0.0     0.0      0.0       0.0      0.0       0.0   1.0      0.0      0.4      0.00              0.00         1    0.003       0      0       0.0       0.0
+ Int      0/0    0.00 KB   0.0      0.0     0.0      0.0       0.0      0.0       0.0   1.0      0.0      0.4      0.00              0.00         1    0.003       0      0       0.0       0.0
+
+** Compaction Stats [default] **
+Priority    Files   Size     Score Read(GB)  Rn(GB) Rnp1(GB) Write(GB) Wnew(GB) Moved(GB) W-Amp Rd(MB/s) Wr(MB/s) Comp(sec) CompMergeCPU(sec) Comp(cnt) Avg(sec) KeyIn KeyDrop Rblob(GB) Wblob(GB)
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+User      0/0    0.00 KB   0.0      0.0     0.0      0.0       0.0      0.0       0.0   0.0      0.0      0.4      0.00              0.00         1    0.003       0      0       0.0       0.0
+
+Blob file count: 0, total size: 0.0 GB
+
+Uptime(secs): 0.0 total, 0.0 interval
+Flush(GB): cumulative 0.000, interval 0.000
+AddFile(GB): cumulative 0.000, interval 0.000
+AddFile(Total Files): cumulative 0, interval 0
+AddFile(L0 Files): cumulative 0, interval 0
+AddFile(Keys): cumulative 0, interval 0
+Cumulative compaction: 0.00 GB write, 0.04 MB/s write, 0.00 GB read, 0.00 MB/s read, 0.0 seconds
+Interval compaction: 0.00 GB write, 0.04 MB/s write, 0.00 GB read, 0.00 MB/s read, 0.0 seconds
+Stalls(count): 0 level0_slowdown, 0 level0_slowdown_with_compaction, 0 level0_numfiles, 0 level0_numfiles_with_compaction, 0 stop for pending_compaction_bytes, 0 slowdown for pending_compaction_bytes, 0 memtable_compaction, 0 memtable_slowdown, interval 0 total count
+Block cache LRUCache@0x274f2b11cd0#8348 capacity: 845.71 MB collections: 1 last_copies: 0 last_secs: 2.4e-05 secs_since: 0
+Block cache entry stats(count,size,portion): Misc(1,0.00 KB,0%)
+
+** File Read Latency Histogram By Level [default] **
