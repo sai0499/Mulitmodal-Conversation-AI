@@ -27,8 +27,8 @@
   "rank_pattern": {},
   "revision": null,
   "target_modules": [
-    "key",
-    "query"
+    "query",
+    "key"
   ],
   "task_type": "SEQ_CLS",
   "trainable_token_indices": null,

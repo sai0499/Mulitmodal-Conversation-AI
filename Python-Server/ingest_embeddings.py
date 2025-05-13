@@ -12,14 +12,7 @@ from docling.backend.pypdfium2_backend   import PyPdfiumDocumentBackend
 from docling.document_converter         import DocumentConverter, PdfFormatOption
 
 from milvus import default_server
-from pymilvus import (
-    connections,
-    utility,
-    Collection,
-    CollectionSchema,
-    FieldSchema,
-    DataType,
-)
+from pymilvus import (connections, utility, Collection, CollectionSchema, FieldSchema, DataType,)
 
 # ─────────────────────────────────────────────────────────────────────────────
 # CONFIGURATION

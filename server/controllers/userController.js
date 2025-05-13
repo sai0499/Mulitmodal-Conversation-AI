@@ -48,7 +48,7 @@ exports.updateApiKey = async (req, res) => {
     return res.json({
       success: true,
       message: 'API key updated successfully.',
-      apiKey: decrypt(updatedUser.apiKey),
+      //apiKey: decrypt(updatedUser.apiKey),
     });
   } catch (error) {
     console.error('Error updating API key:', error);

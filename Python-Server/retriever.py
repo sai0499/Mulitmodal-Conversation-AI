@@ -118,7 +118,7 @@ def diffusion_rerank(
 
 def retrieve(
     query: str,
-    top_k: int = 10,
+    top_k: int = 50,
     rerank: bool = True
 ) -> List[Dict[str, Any]]:
     """
@@ -133,7 +133,7 @@ def retrieve(
 
     q_vec = embed_query(query, tokenizer, model)
     coll = get_milvus_collection()
-    candidates = dense_search(coll, q_vec, limit=50)
+    candidates = dense_search(coll, q_vec, limit=100)
 
     if rerank:
         candidates = diffusion_rerank(candidates)
@@ -147,7 +147,7 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description="RAG Retriever: Dense + Diffusion")
     parser.add_argument("query", help="Natural-language query")
-    parser.add_argument("--top_k", type=int, default=10, help="Number of final results")
+    parser.add_argument("--top_k", type=int, default=100, help="Number of final results")
     parser.add_argument("--no_rerank", action="store_false", dest="rerank",
                         help="Skip diffusion-based re-ranking")
 
