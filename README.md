@@ -1,10 +1,10 @@
 # Multimodal Conversational AI for Information Retrieval
 
-## KARISHMA KUNWAR,M.Sc. Data and Knowledge Engineering, [253388]
+## KARISHMA KUNWAR,M.Sc. Data and Knowledge Engineering
 
-## SAI NISHCHAL GAMINI,M.Sc. Digital Engineering, [250774]
+## SAI NISHCHAL GAMINI,M.Sc. Digital Engineering
 
-## SAI TEJA DAMPANABOINA,M.Sc. Informatik, [231784]
+## SAI TEJA DAMPANABOINA,M.Sc. Informatik
 
 ACM Reference Format:
 Karishma Kunwar, Sai Nishchal Gamini, and Sai Teja Dampanaboina. 2025. Multimodal Conversational AI for Information
